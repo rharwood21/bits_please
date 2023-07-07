@@ -1,0 +1,84 @@
+package game;
+
+import pages.*;
+
+/**
+ * The game controller for managing the navigation and flow of the Trivial Compute Game.
+ */
+public class GameController {
+    private WelcomePage welcomePage;
+    private PlayerNameInputPage playerNameInputPage;
+    private QuestionEditorPage questionEditorPage;
+    private GameplayPage gameplayPage;
+    private WinnerPage winnerPage;
+    private InstructionsPage instructionsPage;
+    /**
+     * Constructs a game.GameController object.
+     * Initializes the GUI screens for the game.
+     */
+    public GameController() {
+        // Create instances of GUI screens
+        welcomePage = new WelcomePage(this);
+        playerNameInputPage = new PlayerNameInputPage(this);
+        questionEditorPage = new QuestionEditorPage(this);
+        gameplayPage = new GameplayPage(this);
+        winnerPage = new WinnerPage(this);
+        instructionsPage = new InstructionsPage(this);
+
+        // Start the application by displaying the welcome page
+        showWelcomePage();
+    }
+    /**
+     * Shows the welcome page.
+     */
+    public void showWelcomePage() {
+        disposePages();
+        welcomePage.setVisible(true);
+    }
+    /**
+     * Shows the player name input page.
+     */
+    public void showPlayerNameInputPage() {
+        disposePages();
+        playerNameInputPage.setVisible(true);
+    }
+    /**
+     * Shows the question editor page.
+     */
+    public void showQuestionEditorPage() {
+        disposePages();
+        questionEditorPage.setVisible(true);
+    }
+    /**
+     * Shows the gameplay page.
+     */
+    public void showGameplayPage() {
+        disposePages();
+        gameplayPage.updatePlayerNames(); // Update player names in the pages.GameplayPage
+        gameplayPage.setVisible(true);
+    }
+    /**
+     * Shows the winner page.
+     */
+    public void showWinnerPage() {
+        disposePages();
+        winnerPage.setVisible(true);
+    }
+
+    public void showInstructionsPage(String returnPage){
+        disposePages();
+        instructionsPage.returnPage = returnPage;
+        instructionsPage.setVisible(true);
+    }
+
+    // Other methods for managing the game flow, handling user input, etc.
+    private void disposePages(){
+        // Dispose all locations instructions can be called from
+        welcomePage.dispose();
+        playerNameInputPage.dispose();
+        questionEditorPage.dispose();
+        gameplayPage.dispose();
+        winnerPage.dispose();
+        instructionsPage.dispose();
+    }
+}
