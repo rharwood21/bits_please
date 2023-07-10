@@ -79,8 +79,12 @@ public class WelcomePage extends JFrame {
         });
         JButton instructionsButton = new JButton("Instructions");
         instructionsButton.addActionListener(e -> controller.showInstructionsPage("WELCOME"));
+        // Adding a button that takes user to the teacher page where questions are answered.
+        JButton teacherPageButton = new JButton("Teacher Home");
+        // TODO: make action listener and actual page class for teacher homepage.
         buttonPanel.add(instructionsButton);
         buttonPanel.add(nextButton);
+        buttonPanel.add(teacherPageButton);
 
         // Add components to the frame
         add(welcomeLabel, BorderLayout.NORTH);
