@@ -1,0 +1,8 @@
+# API Configuration
+api.key=API_KEY
+api.endpoint.create-questions=https://bits-please-api-gateway-2a7afdhw.uc.gateway.dev/create_question
+api.endpoint.initialize-client=https://bits-please-api-gateway-2a7afdhw.uc.gateway.dev/initialize_client
+api.endpoint.modify-question=https://bits-please-api-gateway-2a7afdhw.uc.gateway.dev/modify_question
+api.endpoint.retrieve-question=https://bits-please-api-gateway-2a7afdhw.uc.gateway.dev/retrieve_question
+# User Persistence
+user.persist.session=true

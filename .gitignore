@@ -1,2 +1,5 @@
 /.idea/
 /out/
+/config.ini
+/target/
+*.iml
