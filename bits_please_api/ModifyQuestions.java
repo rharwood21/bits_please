@@ -37,8 +37,15 @@ public class ModifyQuestions {
         }
         return false;
     }
-    public boolean ModifyQuestion(String question_uuid, String modified_category, String modified_question, String modified_answer){
-        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("question_uuid", question_uuid).put("action", "MODIFY").put("modified_category", modified_category).put("modified_question", modified_question).put("modified_answer", modified_answer);
+    public boolean ModifyQuestion(String question_uuid, String modified_category, String modified_question,
+                                  String modified_choice1, String modified_choice2, String modified_choice3,
+                                  String modified_choice4, String modified_answer, QuestionDifficulty modified_difficulty
+    ){
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("question_uuid", question_uuid).put("action", "MODIFY");
+        jsonPayload.put("modified_category", modified_category).put("modified_question", modified_question);
+        jsonPayload.put("modified_answer", modified_answer).put("modified_difficulty", modified_difficulty.getValue());
+        jsonPayload.put("modified_choice1", modified_choice1).put("modified_choice2", modified_choice2);
+        jsonPayload.put("modified_choice3", modified_choice3).put("modified_choice4", modified_choice4);
         try {
             JSONObject jsonObject = apiRequest.sendRequest(apiUrl, jsonPayload);
             return jsonObject.getString("result").toLowerCase().equals("success");

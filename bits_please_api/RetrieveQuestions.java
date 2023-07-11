@@ -27,25 +27,30 @@ public class RetrieveQuestions {
         return instance;
     }
 
-    public JSONObject RetrieveRandomQuestionFromCategory(String category){
-        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category).put("select", "RANDOM_CATEGORY");
+    public JSONObject RetrieveRandomQuestionFromCategory(String category, QuestionDifficulty difficulty){
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category);
+        jsonPayload.put("difficulty", difficulty.getValue()).put("select", "RANDOM_CATEGORY");
         return sendRetrieveRequest(jsonPayload);
     }
-    public JSONObject RetrieveRandomQuestionFromAllCategories(){
-        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all").put("select", "RANDOM_ALL");
+    public JSONObject RetrieveRandomQuestionFromAllCategories(QuestionDifficulty difficulty){
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all");
+        jsonPayload.put("difficulty", difficulty.getValue()).put("select", "RANDOM_ALL");
         return sendRetrieveRequest(jsonPayload);
     }
     public JSONObject RetrieveAllQuestionsFromCategory(String category){
-        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category).put("select", "ALL_CATEGORY");
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category);
+        jsonPayload.put("difficulty", QuestionDifficulty.EASY.getValue()).put("select", "ALL_CATEGORY"); // Difficulty required, but not used
         return sendRetrieveRequest(jsonPayload);
     }
     public JSONObject RetrieveAllQuestions(){
-        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all").put("select", "ALL");
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all");
+        jsonPayload.put("difficulty", QuestionDifficulty.EASY.getValue()).put("select", "ALL"); // Difficulty required, but not used
         return sendRetrieveRequest(jsonPayload);
     }
 
     public JSONObject RetrieveQuestionFromQuestionUUID(String questionUuid){
-        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all").put("select", "FROM_QUESTION_UUID").put("question_uuid", questionUuid);
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all").put("question_uuid", questionUuid);
+        jsonPayload.put("difficulty", QuestionDifficulty.EASY.getValue()).put("select", "FROM_QUESTION_UUID"); // Difficulty required, but not used
         return sendRetrieveRequest(jsonPayload);
     }
 

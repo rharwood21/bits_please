@@ -27,12 +27,17 @@ public class CreateQuestions {
         return instance;
     }
 
-    public String CreateQuestion(String category, String question, String answer) {
-        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category).put("question", question).put("answer", answer);
+    public String CreateQuestion(
+            String category, String question, String answer, String choice1,
+            String choice2, String choice3, String choice4, QuestionDifficulty difficulty
+    ) {
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category).put("question", question);
+        jsonPayload.put("choice1", choice1).put("choice2", choice2).put("choice3", choice3).put("choice4", choice4);
+        jsonPayload.put("answer", answer).put("difficulty", difficulty.getValue());
         try {
             JSONObject jsonObject = apiRequest.sendRequest(apiUrl, jsonPayload);
             String result = jsonObject.getString("result");
-            if (result.toLowerCase().equals("success") && jsonObject.has("question_uuid")){
+            if (result.equalsIgnoreCase("success") && jsonObject.has("question_uuid")){
                 return jsonObject.getString("question_uuid");
             } else {
                 throw new APIRequestException(result);

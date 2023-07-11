@@ -5,13 +5,14 @@ The `bits_please_api` package contains the core components of the Trivial Comput
 ### Files
 
 - `APIRequestException.java`: Exception class for API Errors. 
-- `APITest.java`: Executable class to test the API functionality. 
+- `APITest.java`: **Executable** class to test the API functionality. 
 - `BitsPleaseRequest.java`: Facilitates the actual REST API request on behalf of the relevant classes.
 - `ConfigReader.java`: Reads the local `config.ini` file for required inputs. Stores Client UUID for session persistence. 
 - `CreateQuestions.java`: **Use this class to create questions during runtime.** 
 - `InitializeClient.java`: Initializes client. No need to call this class directly. 
 - `ModifyQuestions.java`: **Use this class to modify questions during runtime.**
 - `RetrieveQuestions.java`: **Use this class to retrieve questions during runtime.**
+- `QuestionDifficulty.java`: Enum class to use for passing question difficulty.
 
 ### Example: Usage during gameplay
 ```
@@ -42,10 +43,14 @@ To run the API Test, to see the functioning of relevant classes, follow these st
 Please make sure to adjust the `javac` and `java` commands based on your specific directory structure and package names.
 
 ### Dependencies
+1. In your IDE, add the following as a project dependency:
+   1. Example (IntelliJ IDEA):
+      1. File > Project Structure > Project Settings > Modules >
+      2. Add > Library > From Maven > Search `com.apache.httpcomponents:httpclient:4.3.2`
 ```
 com.apache.httpcomponents.httpclient
 com.json
 ```
-Used in Development (Project Depedency):
-- **Maven**: _com.apache.httpcomponents:httpclient:4.3.2_
-- **Maven**: _com.json:json:20230618_
+2. Versions used during development:
+   1. **Maven**: _com.apache.httpcomponents:httpclient:4.3.2_
+   2. **Maven**: _com.json:json:20230618_
