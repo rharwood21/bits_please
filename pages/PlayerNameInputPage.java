@@ -49,7 +49,7 @@ public class PlayerNameInputPage extends JFrame {
             controller.showQuestionEditorPage();
         });
         JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> controller.showWelcomePage());
+        backButton.addActionListener(e -> controller.showGameSettingsPage());
         buttonPanel.add(backButton);
         buttonPanel.add(nextButton);
 

@@ -75,7 +75,8 @@ public class WelcomePage extends JFrame {
         nextButton.addActionListener(e -> {
             // Pass control to the controller or navigate to the next page
             // Example: navigating to the player name input page
-            controller.showPlayerNameInputPage();
+//            controller.showPlayerNameInputPage();
+            controller.showGameSettingsPage();
         });
         JButton instructionsButton = new JButton("Instructions");
         instructionsButton.addActionListener(e -> controller.showInstructionsPage("WELCOME"));

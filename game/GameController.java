@@ -7,6 +7,7 @@ import pages.*;
  */
 public class GameController {
     private WelcomePage welcomePage;
+    private GameSettingsPage gameSettingsPage;
     private PlayerNameInputPage playerNameInputPage;
     private QuestionEditorPage questionEditorPage;
     private GameplayPage gameplayPage;
@@ -19,6 +20,7 @@ public class GameController {
     public GameController() {
         // Create instances of GUI screens
         welcomePage = new WelcomePage(this);
+        gameSettingsPage = new GameSettingsPage(this);
         playerNameInputPage = new PlayerNameInputPage(this);
         questionEditorPage = new QuestionEditorPage(this);
         gameplayPage = new GameplayPage(this);
@@ -34,6 +36,13 @@ public class GameController {
     public void showWelcomePage() {
         disposePages();
         welcomePage.setVisible(true);
+    }
+    /**
+     * Shows the game settings page.
+     */
+    public void showGameSettingsPage() {
+        disposePages();
+        gameSettingsPage.setVisible(true);
     }
     /**
      * Shows the player name input page.
@@ -76,6 +85,7 @@ public class GameController {
         // Dispose all locations instructions can be called from
         welcomePage.dispose();
         playerNameInputPage.dispose();
+        gameSettingsPage.dispose();
         questionEditorPage.dispose();
         gameplayPage.dispose();
         winnerPage.dispose();
