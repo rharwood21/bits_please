@@ -28,6 +28,8 @@ com.json
 - GameController.java
 - PlayerData.java
 - TrivialComputeGame.java
+- GameData.java
+- GameBoard.java
 
 **pages**/ (package) - The **_pages_** package contains classes representing different GUI pages of the Trivial Compute Game, including the welcome page, player name input page, question editor page, gameplay page, winner page, and instructions page.
 
