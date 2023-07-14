@@ -27,11 +27,15 @@ public class ModifyQuestions {
         return instance;
     }
 
-    public boolean DeleteQuestion(String question_uuid){
+    public boolean DeleteQuestion(String question_uuid) throws APIRequestException {
         JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("question_uuid", question_uuid).put("action", "DELETE");
         try {
             JSONObject jsonObject = apiRequest.sendRequest(apiUrl, jsonPayload);
-            return jsonObject.getString("result").toLowerCase().equals("success");
+            if (jsonObject.getString("result").equalsIgnoreCase("success")){
+                return true;
+            } else {
+                throw new APIRequestException(jsonObject.getString("result")); // Error has occurred.
+            }
         } catch (IOException e){
             System.err.println(e);
         }
@@ -40,7 +44,7 @@ public class ModifyQuestions {
     public boolean ModifyQuestion(String question_uuid, String modified_category, String modified_question,
                                   String modified_choice1, String modified_choice2, String modified_choice3,
                                   String modified_choice4, String modified_answer, QuestionDifficulty modified_difficulty
-    ){
+    ) throws APIRequestException {
         JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("question_uuid", question_uuid).put("action", "MODIFY");
         jsonPayload.put("modified_category", modified_category).put("modified_question", modified_question);
         jsonPayload.put("modified_answer", modified_answer).put("modified_difficulty", modified_difficulty.getValue());
@@ -48,7 +52,11 @@ public class ModifyQuestions {
         jsonPayload.put("modified_choice3", modified_choice3).put("modified_choice4", modified_choice4);
         try {
             JSONObject jsonObject = apiRequest.sendRequest(apiUrl, jsonPayload);
-            return jsonObject.getString("result").toLowerCase().equals("success");
+            if (jsonObject.getString("result").equalsIgnoreCase("success")){
+                return true;
+            } else {
+                throw new APIRequestException(jsonObject.getString("result")); // Error has occurred.
+            }
         } catch (IOException e){
             System.err.println(e);
         }

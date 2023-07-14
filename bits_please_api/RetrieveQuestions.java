@@ -27,36 +27,54 @@ public class RetrieveQuestions {
         return instance;
     }
 
-    public JSONObject RetrieveRandomQuestionFromCategory(String category, QuestionDifficulty difficulty){
+    public JSONQuestions RetrieveRandomQuestionFromCategory(String category, QuestionDifficulty difficulty) throws APIRequestException {
         JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category);
         jsonPayload.put("difficulty", difficulty.getValue()).put("select", "RANDOM_CATEGORY");
         return sendRetrieveRequest(jsonPayload);
     }
-    public JSONObject RetrieveRandomQuestionFromAllCategories(QuestionDifficulty difficulty){
+    public JSONQuestions RetrieveRandomQuestionFromAllCategories(QuestionDifficulty difficulty) throws APIRequestException {
         JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all");
         jsonPayload.put("difficulty", difficulty.getValue()).put("select", "RANDOM_ALL");
         return sendRetrieveRequest(jsonPayload);
     }
-    public JSONObject RetrieveAllQuestionsFromCategory(String category){
+    public JSONQuestions RetrieveAllQuestionsFromCategory(String category) throws APIRequestException {
         JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category);
         jsonPayload.put("difficulty", QuestionDifficulty.EASY.getValue()).put("select", "ALL_CATEGORY"); // Difficulty required, but not used
         return sendRetrieveRequest(jsonPayload);
     }
-    public JSONObject RetrieveAllQuestions(){
+    public JSONQuestions RetrieveAllQuestions() throws APIRequestException {
         JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all");
         jsonPayload.put("difficulty", QuestionDifficulty.EASY.getValue()).put("select", "ALL"); // Difficulty required, but not used
         return sendRetrieveRequest(jsonPayload);
     }
 
-    public JSONObject RetrieveQuestionFromQuestionUUID(String questionUuid){
-        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all").put("question_uuid", questionUuid);
-        jsonPayload.put("difficulty", QuestionDifficulty.EASY.getValue()).put("select", "FROM_QUESTION_UUID"); // Difficulty required, but not used
+    public JSONQuestions RetrieveQuestionFromQuestionUUID(String questionUuid) throws APIRequestException {
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all").put("select", "FROM_QUESTION_UUID");
+        jsonPayload.put("difficulty", QuestionDifficulty.EASY.getValue()).put("question_uuid", questionUuid); // Difficulty required, but not used
         return sendRetrieveRequest(jsonPayload);
     }
 
-    private JSONObject sendRetrieveRequest(JSONObject jsonPayload){
+    public JSONQuestions RetrieveAllDefaultQuestions() throws APIRequestException {
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", "all"); // Category required, but not used
+        jsonPayload.put("difficulty", QuestionDifficulty.EASY.getValue()).put("select", "ALL"); // Difficulty required, but not used
+        jsonPayload.put("default", "True");
+        return sendRetrieveRequest(jsonPayload);
+    }
+
+    public JSONQuestions RetrieveDefaultQuestionsByCategory(String category) throws APIRequestException {
+        JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category);
+        jsonPayload.put("difficulty", QuestionDifficulty.EASY.getValue()).put("select", "ALL_CATEGORY"); // Difficulty required, but not used
+        jsonPayload.put("default", "True");
+        return sendRetrieveRequest(jsonPayload);
+    }
+
+    private JSONQuestions sendRetrieveRequest(JSONObject jsonPayload) throws APIRequestException {
         try {
-            return apiRequest.sendRequest(apiUrl, jsonPayload);
+            JSONObject response = apiRequest.sendRequest(apiUrl, jsonPayload);
+            if (response.has("result")){
+                throw new APIRequestException(response.getString("result")); // Error has occurred.
+            }
+            return new JSONQuestions(response);
         } catch (IOException e){
             System.err.println(e);
         }

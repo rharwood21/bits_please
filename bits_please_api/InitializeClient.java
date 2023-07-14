@@ -10,7 +10,7 @@ public class InitializeClient {
     private String apiUrl;
     private BitsPleaseRequest apiRequest;
 
-    private InitializeClient() {
+    private InitializeClient() throws APIRequestException {
         // Obtain the UUID from the REST API initialization endpoint
         ConfigReader configReader = new ConfigReader();
         apiKey = configReader.getAPIKey();
@@ -33,7 +33,7 @@ public class InitializeClient {
         return instance;
     }
 
-    private String initializeUUID() {
+    private String initializeUUID() throws APIRequestException {
         JSONObject jsonPayload = new JSONObject().put("api_key", apiKey).put("action", "INITIALIZE");
         try {
             JSONObject jsonObject = apiRequest.sendRequest(apiUrl, jsonPayload);
@@ -60,7 +60,7 @@ public class InitializeClient {
         return isValidUUID(uuid);
     }
 
-    private boolean isValidUUID(String uuid) {
+    private boolean isValidUUID(String uuid) throws APIRequestException {
         JSONObject jsonPayload = new JSONObject().put("api_key", apiKey).put("action", "VERIFY").put("uuid", uuid);
         try {
             JSONObject jsonObject = apiRequest.sendRequest(apiUrl, jsonPayload);
@@ -69,6 +69,6 @@ public class InitializeClient {
         } catch (IOException e){
             System.err.println(e);
         }
-        return false;
+        throw new APIRequestException("Unable to validate Client UUID. Ensure MySQL DB is active.");
     }
 }

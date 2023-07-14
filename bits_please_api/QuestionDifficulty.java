@@ -16,4 +16,21 @@ public enum QuestionDifficulty {
     public String getValue() {
         return value;
     }
+
+    public static QuestionDifficulty getValue(int difficulty){
+        switch (difficulty){
+            case 1:
+                return EASY;
+            case 2:
+                return MEDIUM;
+            case 3:
+                return MODERATE;
+            case 4:
+                return HARD;
+            case 5:
+                return VERY_HARD;
+            default:
+                throw new RuntimeException("Invalid Question Difficulty");
+        }
+    }
 }

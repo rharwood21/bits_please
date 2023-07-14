@@ -30,7 +30,7 @@ public class CreateQuestions {
     public String CreateQuestion(
             String category, String question, String answer, String choice1,
             String choice2, String choice3, String choice4, QuestionDifficulty difficulty
-    ) {
+    ) throws APIRequestException {
         JSONObject jsonPayload = new JSONObject().put("uuid", clientUUID).put("category", category).put("question", question);
         jsonPayload.put("choice1", choice1).put("choice2", choice2).put("choice3", choice3).put("choice4", choice4);
         jsonPayload.put("answer", answer).put("difficulty", difficulty.getValue());
