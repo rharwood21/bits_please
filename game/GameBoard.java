@@ -14,6 +14,7 @@ public class GameBoard {
         * */
         String color = "";
         String type = "";
+
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 switch (i % 4) {

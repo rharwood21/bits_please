@@ -12,5 +12,6 @@ public class Square {
         this.color = color;
         this.type = type;
     }
+
 }
 
