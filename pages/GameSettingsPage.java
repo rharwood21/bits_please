@@ -1,7 +1,11 @@
 package pages;
 
-import game.*;
+import game.GameController;
+import game.GameData;
+
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 /**
@@ -31,7 +35,7 @@ public class GameSettingsPage extends JFrame {
 		headerPanel.add(nameLabel);
 
 		JPanel cbPanel = new JPanel();
-		cbPanel.setLayout(new GridLayout(5, 2));
+		cbPanel.setLayout(new GridLayout(6, 2));
 
 		// hardcode category options for now
 		String[] subjectChoices = { "History", "Math", "Science", "English" };
@@ -78,6 +82,21 @@ public class GameSettingsPage extends JFrame {
 		color4CB.setSelectedIndex(3);
 		color4CB.setVisible(true);
 		cbPanel.add(color4CB);
+
+		// Use Default Checkbox
+		JCheckBox checkbox = new JCheckBox("Use Default Question Bank Trivia Questions?");
+		checkbox.setSelected(true);
+		checkbox.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				JCheckBox source = (JCheckBox) e.getSource();
+				if (source.isSelected()) {
+					GameData.setUseDefaultQuestions(true);
+				} else {
+					GameData.setUseDefaultQuestions(false);
+				}
+			}
+		});
+		cbPanel.add(checkbox);
 
 		JPanel buttonPanel = new JPanel();
 

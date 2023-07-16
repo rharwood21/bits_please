@@ -124,12 +124,8 @@ public class Question {
     /**
      * Deletes the question from the database.
      */
-    public void deleteQuestion() {
-        try {
-            modifyQuestions.DeleteQuestion(questionUUID);
-        } catch (APIRequestException e){
-            System.err.println("Unable to delete Question: "+e);
-        }
+    public void deleteQuestion() throws APIRequestException {
+        modifyQuestions.DeleteQuestion(questionUUID);
     }
 
     /**
@@ -238,17 +234,13 @@ public class Question {
      * @return A list of Question objects representing all the client questions.
      *         Returns {@code null} if there was an API request exception.
      */
-    public static List<Question> retrieveAllClientQuestions(){
+    public static List<Question> retrieveAllClientQuestions() throws APIRequestException {
         List<Question> list = new ArrayList<>();
         RetrieveQuestions retrieveQuestions = RetrieveQuestions.getInstance();
         JSONQuestions retrievedQuestions;
 
         // Retrieve Client Questions, create JSONQuestions object
-        try {
-            retrievedQuestions = retrieveQuestions.RetrieveAllQuestions();
-        } catch (APIRequestException e){
-            return null;
-        }
+        retrievedQuestions = retrieveQuestions.RetrieveAllQuestions();
 
         // Add Question objects to list
         for (int i = 0; i < retrievedQuestions.getSize(); i++) {
