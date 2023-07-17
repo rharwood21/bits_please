@@ -140,10 +140,7 @@ public class QuestionEditorPage extends JFrame {
      */
     private void saveQuestions(){
         int rowCount = tableModel.getRowCount();
-        int currentQuestionsSize = 0;
-        if (tempQuestionList != null){
-            currentQuestionsSize = tempQuestionList.size();
-        }
+        int currentQuestionsSize = tempQuestionList.size();
         Object[][] questionsTableContent = parseAndValidate();
         if (questionsTableContent == null){
             return;

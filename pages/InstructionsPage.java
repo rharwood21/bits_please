@@ -36,7 +36,7 @@ public class InstructionsPage extends JFrame {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         try {
-            image = ImageIO.read(getClass().getResource("/images/Rules_Composite.jpg"));
+            image = ImageIO.read(getClass().getResource("../resources/images/Rules_Composite.jpg"));
             ImageIcon imageIcon = new ImageIcon(image);
             imageLabel.setIcon(imageIcon);
         } catch (IOException e) {
