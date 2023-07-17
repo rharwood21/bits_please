@@ -1,13 +1,13 @@
 package pages;
 
-import game.GameController;
-
-import javax.imageio.ImageIO;
+import game.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  * Represents the welcome page of the Trivial Compute Game.
@@ -35,7 +35,7 @@ public class WelcomePage extends JFrame {
 
         // Load the image
         try {
-            image = ImageIO.read(getClass().getResource("/images/Bits_Please_Logo.png")); // Replace with your image path
+            image = ImageIO.read(getClass().getResource("../resources/images/Bits_Please_Logo.png")); // Replace with your image path
         } catch (IOException e) {
             e.printStackTrace();
         }

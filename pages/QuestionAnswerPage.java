@@ -23,7 +23,7 @@ public class QuestionAnswerPage extends JFrame {
         this.setTitle("Question And Answer Page");  //sets title of frame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setResizable(false);  //prevent frame from being resized
-        ImageIcon image = new ImageIcon("/images/BitsPleaseLogo.jpg");
+        ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
         this.setIconImage(image.getImage());  //change icon of frame
 
         // Set the layout manager
