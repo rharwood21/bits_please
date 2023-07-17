@@ -13,5 +13,8 @@ public class Square {
         this.type = type;
     }
 
+    public Point getBoardPosition() {
+        return boardPosition;
+    }
 }
 
