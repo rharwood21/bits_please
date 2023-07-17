@@ -204,7 +204,10 @@ public class QuestionEditorPage extends JFrame {
      */
     private void deleteSelectedQuestion() {
         int selectedRow = questionTable.getSelectedRow();
-        int currentQuestionsSize = tempQuestionList.size();
+        int currentQuestionsSize = 0;
+        if (tempQuestionList != null) {
+            currentQuestionsSize = tempQuestionList.size();
+        }
         if (selectedRow != -1) {
             int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the selected question?", "Delete Question", JOptionPane.YES_NO_OPTION);
             if (choice == JOptionPane.YES_OPTION) {
@@ -278,7 +281,10 @@ public class QuestionEditorPage extends JFrame {
     private Object[][] parseAndValidate() {
         int rowCount = tableModel.getRowCount();
         Object[][] parsedValues = new Object[rowCount][9];
-        int currentQuestionsSize = tempQuestionList.size();
+        int currentQuestionsSize = 0;
+        if (tempQuestionList != null) {
+            currentQuestionsSize = tempQuestionList.size();
+        }
         String question, category, answer, choice1, choice2, choice3, choice4, difficultyStr;
 
         for (int row = 0; row < rowCount; row++) {
