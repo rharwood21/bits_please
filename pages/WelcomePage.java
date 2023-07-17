@@ -41,6 +41,8 @@ public class WelcomePage extends JFrame {
         }
 
         // Create components
+        ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
+        this.setIconImage(image.getImage());  //change icon of frame
         JPanel welcomePanel = new JPanel();
         welcomePanel.setLayout(new GridLayout(2,1));
         welcomePanel.setBackground(new Color(248, 237, 212));

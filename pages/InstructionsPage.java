@@ -29,6 +29,8 @@ public class InstructionsPage extends JFrame {
         setLayout(new BorderLayout());
 
         // Create components
+        ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
+        this.setIconImage(image.getImage());  //change icon of frame
         JLabel imageLabel = new JLabel();
 
         JScrollPane scrollPane = new JScrollPane(imageLabel);

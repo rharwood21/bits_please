@@ -24,6 +24,8 @@ public class WinnerPage extends JFrame {
         setLayout(new BorderLayout());
 
         // Create components
+        ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
+        this.setIconImage(image.getImage());  //change icon of frame
         JLabel winnerLabel = new JLabel("Congratulations, Player X! You are the winner!");
         winnerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 

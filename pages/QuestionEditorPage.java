@@ -50,6 +50,8 @@ public class QuestionEditorPage extends JFrame {
         setLayout(new BorderLayout());
 
         // Create the last updated label and set its properties
+        ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
+        this.setIconImage(image.getImage());  //change icon of frame
         lastUpdatedLabel = new JLabel("Last Updated: N/A");
         lastUpdatedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         lastUpdatedLabel.setFont(lastUpdatedLabel.getFont().deriveFont(Font.BOLD));

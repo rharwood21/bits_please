@@ -29,6 +29,8 @@ public class GameSettingsPage extends JFrame {
 		setLayout(new BorderLayout());
 
 		// Create components
+		ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
+		this.setIconImage(image.getImage());  //change icon of frame
 		JLabel nameLabel = new JLabel("Select categories and colors:");
 		nameLabel.setVisible(true);
 		JPanel headerPanel = new JPanel();

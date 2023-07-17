@@ -25,6 +25,8 @@ public class PlayerNameInputPage extends JFrame {
         setLayout(new BorderLayout());
 
         // Create components
+        ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
+        this.setIconImage(image.getImage());  //change icon of frame
         JLabel nameLabel = new JLabel("Enter player names:");
         nameFields = new JTextField[4];
         for (int i = 0; i < nameFields.length; i++) {

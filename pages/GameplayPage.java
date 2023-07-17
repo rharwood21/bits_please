@@ -27,6 +27,8 @@ public class GameplayPage extends JFrame {
         setLayout(new BorderLayout());
 
         // Create components
+        ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
+        this.setIconImage(image.getImage());  //change icon of frame
         JLabel gameLabel = new JLabel("Gameplay Page");
         JPanel mainPanel = new JPanel(new BorderLayout());
         for (int i = 0; i < 9; i++) {
