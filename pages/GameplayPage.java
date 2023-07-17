@@ -77,6 +77,10 @@ public class GameplayPage extends JFrame {
 
     private void drawSquare(Square square) {
         // TODO: Draw a square in the GamePanel(?) for each square. Squares contain position and color so this shouldn't be so bad.
+        // Ignoring dead squares which are not drawn. This space is used for player score graphics.
+        if (!square.getType().equals("Dead")) {
+
+        }
     }
 
     // Method to update the player names in the GUI

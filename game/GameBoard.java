@@ -68,6 +68,8 @@ public class GameBoard {
                 ) {
                     type = "Dead";
                     color = "W";
+                } else {
+                    type = "Q";
                 }
                 squares[i][j] = new Square(new Point(i, j), color, type);
             }
