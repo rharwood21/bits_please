@@ -10,6 +10,7 @@ The `pages` package contains the graphical user interface (GUI) pages for the Tr
 - `QuestionEditorPage.java`: Enables editing and customization of game questions, including adding, modifying, or deleting questions.
 - `WelcomePage.java`: The initial page of the game that welcomes the players and provides an introduction.
 - `WinnerPage.java`: Displays the winner(s) of the Trivial Compute Game, along with their final scores.
+- `QuestionAnswerPage.java` : Displays a question in the category, then the answer, and opponents vote whether correct or not
 
 ### Usage
 
