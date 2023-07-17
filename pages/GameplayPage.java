@@ -11,6 +11,7 @@ import java.awt.*;
 public class GameplayPage extends JFrame {
     private GameController controller;
     private JPanel playerPanel;
+    private GameBoard board = new GameBoard();
 
     /**
      * Constructs a pages.GameplayPage object.
@@ -28,6 +29,12 @@ public class GameplayPage extends JFrame {
         // Create components
         JLabel gameLabel = new JLabel("Gameplay Page");
         JPanel mainPanel = new JPanel(new BorderLayout());
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                drawSquare(board.getSquare(i,j));
+            }
+        }
+
 
         // Create a panel for the player names
         playerPanel = new JPanel();
@@ -66,6 +73,10 @@ public class GameplayPage extends JFrame {
         setSize(screenWidth, screenHeight);
 
         setLocationRelativeTo(null); // Center the frame on the screen
+    }
+
+    private void drawSquare(Square square) {
+        // TODO: Draw a square in the GamePanel(?) for each square. Squares contain position and color so this shouldn't be so bad.
     }
 
     // Method to update the player names in the GUI
