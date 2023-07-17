@@ -86,6 +86,6 @@ public class QuestionAnswerPage extends JFrame {
         int screenHeight = (int) (screenSize.getHeight() * 0.5);
         setSize(screenWidth, screenHeight);
         setLocationRelativeTo(null); // Center the frame on the screen
-        setVisible(true);
+        //setVisible(true);
     }
 }
