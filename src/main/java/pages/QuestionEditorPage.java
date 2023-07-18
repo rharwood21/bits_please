@@ -27,6 +27,7 @@ public class QuestionEditorPage extends JFrame {
     private JTable questionTable;
     private DefaultTableModel tableModel;
     private JLabel lastUpdatedLabel;
+    private JCheckBox checkbox;
     private List<Question> tempQuestionList;
     private final int COLUMN_QUESTION_TEXT = 0;
     private final int COLUMN_QUESTION_CATEGORY = 1;
@@ -37,6 +38,13 @@ public class QuestionEditorPage extends JFrame {
     private final int COLUMN_MULTIPLE_CHOICE_FOUR = 6;
     private final int COLUMN_QUESTION_DIFFICULTY = 7;
     private final int COLUMN_QUESTION_IS_ALTERED = 8; // Used Internally, Not in Table
+
+    // Buttons
+    private JButton newQuestionButton;
+    private JButton saveQuestionButton;
+    private JButton refreshQuestionsButton;
+    private JButton deleteQuestionButton;
+
 
     /**
      * Constructs a pages.QuestionEditorPage object.
@@ -58,22 +66,39 @@ public class QuestionEditorPage extends JFrame {
         lastUpdatedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         lastUpdatedLabel.setFont(lastUpdatedLabel.getFont().deriveFont(Font.BOLD));
 
+        checkbox = new JCheckBox("Use Default Question Bank Trivia Questions?");
+        checkbox.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                JCheckBox source = (JCheckBox) e.getSource();
+                if (source.isSelected()) {
+                    GameData.setUseDefaultQuestions(true);
+                    refreshQuestions();
+                    changeComponentEditability(false);
+                } else {
+                    GameData.setUseDefaultQuestions(false);
+                    refreshQuestions();
+                    changeComponentEditability(true);
+                }
+            }
+        });
+
         // Create a panel to hold the last updated label
         JPanel lastUpdatedPanel = new JPanel(new BorderLayout());
+        lastUpdatedPanel.add(checkbox, BorderLayout.WEST);
         lastUpdatedPanel.add(lastUpdatedLabel, BorderLayout.EAST);
 
         // Question Button Panel
         JPanel questionButtonPanel = new JPanel();
-        JButton newQuestionButton = new JButton("New Question");
+        newQuestionButton = new JButton("New Question");
         newQuestionButton.addActionListener(e -> tableModel.addRow(new Object[tableModel.getColumnCount()]));
 
-        JButton saveQuestionButton = new JButton("Save Questions");
+        saveQuestionButton = new JButton("Save Questions");
         saveQuestionButton.addActionListener(e -> saveQuestions());
 
-        JButton refreshQuestionsButton = new JButton("Refresh Questions");
+        refreshQuestionsButton = new JButton("Refresh Questions");
         refreshQuestionsButton.addActionListener(e -> refreshQuestions());
 
-        JButton deleteQuestionButton = new JButton("Delete Question");
+        deleteQuestionButton = new JButton("Delete Question");
         deleteQuestionButton.addActionListener(e -> deleteSelectedQuestion());
         questionButtonPanel.add(newQuestionButton);
         questionButtonPanel.add(saveQuestionButton);
@@ -133,6 +158,7 @@ public class QuestionEditorPage extends JFrame {
         }
         displayQuestions(tempQuestionList);
         updateLastUpdatedLabel();
+        changeComponentEditability(true);
     }
 
 
@@ -193,7 +219,11 @@ public class QuestionEditorPage extends JFrame {
     private void refreshQuestions(){
         // Retrieve new Client Questions from DB
         try {
-            tempQuestionList = Question.retrieveAllClientQuestions();
+            if (checkbox.isSelected()){
+                tempQuestionList = GameData.getDefaultQuestionList();
+            } else {
+                tempQuestionList = Question.retrieveAllClientQuestions();
+            }
         } catch (APIRequestException e){
             JOptionPane.showMessageDialog(this, "API Request Failed: Please Ensure DB is Active.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -234,6 +264,13 @@ public class QuestionEditorPage extends JFrame {
 
 
     // HELPER FUNCTIONS
+    private void changeComponentEditability(boolean isEditable){
+        questionTable.setEnabled(isEditable);
+        newQuestionButton.setEnabled(isEditable);
+        saveQuestionButton.setEnabled(isEditable);
+        refreshQuestionsButton.setEnabled(isEditable);
+        deleteQuestionButton.setEnabled(isEditable);
+    }
     /**
      * Displays the retrieved questions in the table.
      *

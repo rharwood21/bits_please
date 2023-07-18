@@ -5,8 +5,6 @@ import game.GameData;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 /**
@@ -94,21 +92,6 @@ public class GameSettingsPage extends JFrame {
 		color4CB.setSelectedIndex(3);
 		color4CB.setVisible(true);
 		cbPanel.add(color4CB);
-
-		// Use Default Checkbox
-		JCheckBox checkbox = new JCheckBox("Use Default Question Bank Trivia Questions?");
-		checkbox.setSelected(true);
-		checkbox.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				JCheckBox source = (JCheckBox) e.getSource();
-				if (source.isSelected()) {
-					GameData.setUseDefaultQuestions(true);
-				} else {
-					GameData.setUseDefaultQuestions(false);
-				}
-			}
-		});
-		cbPanel.add(checkbox);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setBackground(new Color(248, 237, 212));

@@ -10,6 +10,7 @@ public class GameData {
     private static String[] categoryColors = new String[4];
 
     private static List<Question> questionList = null;
+    private static List<Question> defaultQuestionList = Question.retrieveAllDefaultQuestions();
 
     private static boolean useDefaultQuestions = true;
     private static QuestionDifficulty minimumDifficulty = QuestionDifficulty.EASY;
@@ -34,6 +35,10 @@ public class GameData {
 
     public static int getUniqueColorCount(){
         return uniqCount(categoryColors);
+    }
+
+    public static List<Question> getDefaultQuestionList() {
+        return defaultQuestionList;
     }
 
     public static boolean useDefaultQuestions() {
