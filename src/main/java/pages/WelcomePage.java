@@ -8,8 +8,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.swing.BoxLayout;
-import java.awt.FlowLayout;
 
 
 /**
@@ -122,6 +120,7 @@ public class WelcomePage extends JFrame {
         // Adding a button that takes user to the teacher page where questions are answered.
         JButton teacherPageButton = new JButton("Teacher Home");
         teacherPageButton.setFont(new Font("Roboto", Font.BOLD, 20)); //change the font and its size
+        teacherPageButton.addActionListener(e -> controller.showQuestionEditorPage());
         // TODO: make action listener and actual page class for teacher homepage.
         buttonPanel.add(instructionsButton);
         buttonPanel.add(nextButton);

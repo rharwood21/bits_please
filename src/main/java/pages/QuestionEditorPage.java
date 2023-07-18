@@ -6,6 +6,8 @@ import game.GameData;
 import game.Question;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -62,7 +64,6 @@ public class QuestionEditorPage extends JFrame {
 
         // Question Button Panel
         JPanel questionButtonPanel = new JPanel();
-
         JButton newQuestionButton = new JButton("New Question");
         newQuestionButton.addActionListener(e -> tableModel.addRow(new Object[tableModel.getColumnCount()]));
 
@@ -74,7 +75,6 @@ public class QuestionEditorPage extends JFrame {
 
         JButton deleteQuestionButton = new JButton("Delete Question");
         deleteQuestionButton.addActionListener(e -> deleteSelectedQuestion());
-
         questionButtonPanel.add(newQuestionButton);
         questionButtonPanel.add(saveQuestionButton);
         questionButtonPanel.add(refreshQuestionsButton);
@@ -95,15 +95,15 @@ public class QuestionEditorPage extends JFrame {
 
         // GUI Control Button Panel
         JPanel buttonPanel = new JPanel();
-        JButton nextButton = new JButton("Next");
-        nextButton.addActionListener(e -> controller.showGameplayPage());
+//        JButton nextButton = new JButton("Next");
+//        nextButton.addActionListener(e -> controller.showGameSettingsPage());
         JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> controller.showPlayerNameInputPage());
+        backButton.addActionListener(e -> controller.showWelcomePage());
         JButton instructionsButton = new JButton("Instructions");
         instructionsButton.addActionListener(e -> controller.showInstructionsPage("EDITOR"));
         buttonPanel.add(instructionsButton);
         buttonPanel.add(backButton);
-        buttonPanel.add(nextButton);
+//        buttonPanel.add(nextButton);
 
         // Add components to the frame
         JPanel northPanel = new JPanel(new BorderLayout());
