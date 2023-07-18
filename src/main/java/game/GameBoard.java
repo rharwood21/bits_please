@@ -20,7 +20,7 @@ public class GameBoard {
         int HQSwitcher = 0;
         for (int i = 0; i < numCols; i++) {
             for (int j = 0; j < numRows; j++) {
-                switch (j % 4) {
+                switch (i*j % 4) {
                     case 0:
                         color = "R";
                         break;
@@ -73,7 +73,9 @@ public class GameBoard {
                     type = "Q";
                 }
                 squares[i][j] = new Square(new Point(i, j), color, type);
+                // System.out.print(color); // Debugging for Text version of Board
             }
+            //System.out.println(); // Debugging for Text version of board
         }
     }
     public Square getSquare(int i, int j) {

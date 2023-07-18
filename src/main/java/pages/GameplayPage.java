@@ -99,7 +99,6 @@ public class GameplayPage extends JFrame {
         //squareGraphics.setSize(100, 150);
         ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
         squareGraphics.setIcon(icon);
-        System.out.println(square.getColor());
         if (!square.getType().equals("Dead")) {
             switch (square.getColor()) {
                 case "R":
@@ -113,6 +112,7 @@ public class GameplayPage extends JFrame {
                     break;
                 case "G":
                     squareGraphics.setBackground(Color.green);
+                    break;
                 default:
                     squareGraphics.setBackground(Color.white);
             }
