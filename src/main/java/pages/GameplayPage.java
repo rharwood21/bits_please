@@ -33,7 +33,7 @@ public class GameplayPage extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                drawSquare(board.getSquare(i,j));
+                drawSquare(board.getSquare(i,j), mainPanel);
             }
         }
 
@@ -77,12 +77,31 @@ public class GameplayPage extends JFrame {
         setLocationRelativeTo(null); // Center the frame on the screen
     }
 
-    private void drawSquare(Square square) {
+    private void drawSquare(Square square, JPanel mainPanel) {
         // TODO: Draw a square in the GamePanel(?) for each square. Squares contain position and color so this shouldn't be so bad.
         // Ignoring dead squares which are not drawn. This space is used for player score graphics.
+        JPanel squareGraphics = new JPanel();
+        squareGraphics.setLocation(square.getBoardPosition().x * 5, square.getBoardPosition().y * 5);
+        squareGraphics.setSize(100, 150);
         if (!square.getType().equals("Dead")) {
+            switch (square.getColor()) {
+                case "R":
+                    squareGraphics.setBackground(Color.red);
+                    break;
+                case "Y":
+                    squareGraphics.setBackground(Color.yellow);
+                    break;
+                case "B":
+                    squareGraphics.setBackground(Color.blue);
+                    break;
+                case "G":
+                    squareGraphics.setBackground(Color.green);
+                default:
+                    squareGraphics.setBackground(Color.white);
+            }
 
         }
+        mainPanel.add(squareGraphics);
     }
 
     // Method to update the player names in the GUI
