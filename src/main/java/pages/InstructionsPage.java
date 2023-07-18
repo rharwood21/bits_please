@@ -101,6 +101,7 @@ public class InstructionsPage extends JFrame {
 
         JPanel instPanel = new JPanel(new GridLayout(16,1));
         instPanel.setBorder(new EmptyBorder(0,screenHeight/10,0,screenHeight/10));
+        instPanel.setBackground( new Color(248, 237, 212) );
 
         instPanel.add(objectTitleLabel);
         instPanel.add(objectText);
@@ -122,6 +123,7 @@ public class InstructionsPage extends JFrame {
         JScrollPane scrollPanel = new JScrollPane(instPanel);
         scrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPanel.setBackground( new Color(248, 237, 212) );
 
         // Return Button
         JButton returnButton = new JButton("Return");
