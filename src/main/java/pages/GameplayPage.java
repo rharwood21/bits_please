@@ -69,7 +69,7 @@ public class GameplayPage extends JFrame {
 
         // Add components to the panels
         mainPanel.add(playerPanel, BorderLayout.SOUTH);
-        mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.NORTH);
         mainPanel.add(gameBoardPanel, BorderLayout.CENTER);
 
         // Add components to the frame
