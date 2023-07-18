@@ -70,12 +70,10 @@ public class PlayerNameInputPage extends JFrame {
             }
             // Pass player names to the controller or navigate to the next page
             // Example: navigating to the question editor page
-            if (GameData.useDefaultQuestions()){
-                controller.showGameplayPage();
-                GameData.setQuestionList(Question.retrieveAllDefaultQuestions());
-            } else {
-                controller.showQuestionEditorPage();
-            }
+
+            controller.showGameplayPage();
+            GameData.setQuestionList(Question.retrieveAllDefaultQuestions());
+
 
         });
         JButton backButton = new JButton("Back");

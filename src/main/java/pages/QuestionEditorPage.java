@@ -58,22 +58,8 @@ public class QuestionEditorPage extends JFrame {
         lastUpdatedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         lastUpdatedLabel.setFont(lastUpdatedLabel.getFont().deriveFont(Font.BOLD));
 
-        // Use Default Checkbox
-        JCheckBox checkbox = new JCheckBox("Use Default Question Bank Trivia Questions?");
-        checkbox.setSelected(true);
-        checkbox.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                JCheckBox source = (JCheckBox) e.getSource();
-                if (source.isSelected()) {
-                    GameData.setUseDefaultQuestions(true);
-                } else {
-                    GameData.setUseDefaultQuestions(false);
-                }
-            }
-        });
         // Create a panel to hold the last updated label
         JPanel lastUpdatedPanel = new JPanel(new BorderLayout());
-        lastUpdatedPanel.add(checkbox, BorderLayout.WEST);
         lastUpdatedPanel.add(lastUpdatedLabel, BorderLayout.EAST);
 
         // Question Button Panel
@@ -109,15 +95,15 @@ public class QuestionEditorPage extends JFrame {
 
         // GUI Control Button Panel
         JPanel buttonPanel = new JPanel();
-        JButton nextButton = new JButton("Next");
-        nextButton.addActionListener(e -> controller.showGameSettingsPage());
+//        JButton nextButton = new JButton("Next");
+//        nextButton.addActionListener(e -> controller.showGameSettingsPage());
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> controller.showWelcomePage());
         JButton instructionsButton = new JButton("Instructions");
         instructionsButton.addActionListener(e -> controller.showInstructionsPage("EDITOR"));
         buttonPanel.add(instructionsButton);
         buttonPanel.add(backButton);
-        buttonPanel.add(nextButton);
+//        buttonPanel.add(nextButton);
 
         // Add components to the frame
         JPanel northPanel = new JPanel(new BorderLayout());
