@@ -35,7 +35,7 @@ public class InstructionsPage extends JFrame {
         setLayout(new BorderLayout());
 
         JLabel objectTitleLabel = new JLabel("Object of the Game", SwingConstants.CENTER);
-        objectTitleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        objectTitleLabel.setFont(new Font("Roboto", Font.BOLD, 30));
         // TODO undo hardcode
         JTextArea objectText = setTextArea("To move along the circular track and the spokes correctly answering " +
                 "questions, and to collect colored wedges for correctly answering questions in each of the four category" +

@@ -37,7 +37,7 @@ public class GameSettingsPage extends JFrame {
 		ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
 		this.setIconImage(image.getImage());  //change icon of frame
 		JLabel nameLabel = new JLabel("Select categories and colors:");
-		nameLabel.setFont(new Font("Arial", Font.PLAIN, 24));
+		nameLabel.setFont(new Font("Roboto", Font.BOLD, 30));
 		nameLabel.setVisible(true);
 		JPanel headerPanel = new JPanel();
 		headerPanel.setBackground(new Color(248, 237, 212));
@@ -152,5 +152,7 @@ public class GameSettingsPage extends JFrame {
 		setSize(screenWidth, screenHeight);
 
 		setLocationRelativeTo(null); // Center the frame on the screen
+
 	}
 }
+

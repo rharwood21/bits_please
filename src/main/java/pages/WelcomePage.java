@@ -8,6 +8,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import javax.swing.BoxLayout;
+import java.awt.FlowLayout;
+
 
 /**
  * Represents the welcome page of the Trivial Compute Game.
@@ -48,13 +51,13 @@ public class WelcomePage extends JFrame {
         welcomePanel.setBackground(new Color(248, 237, 212));
         
         JLabel welcomeLabel = new JLabel("Bits Please Presents:");
-        welcomeLabel.setFont(new Font("Arial", Font.PLAIN, 24));
+        welcomeLabel.setFont(new Font("Roboto", Font.PLAIN, 30));
         
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         welcomeLabel.setBorder(new EmptyBorder(screenHeight/12,0,0,0));
         
         JLabel titleLabel = new JLabel("Trivial Compute");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        titleLabel.setFont(new Font("Roboto", Font.BOLD, 40));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setBorder(new EmptyBorder(0,0,screenHeight/20,0));
         
@@ -104,23 +107,26 @@ public class WelcomePage extends JFrame {
         buttonPanel.setLayout(new GridLayout(3,1));
         buttonPanel.setBackground( new Color(248, 237, 212) );
 
-        
+
         JButton nextButton = new JButton("Begin Gameplay");
+        nextButton.setFont(new Font("Roboto", Font.BOLD, 20));
         nextButton.addActionListener(e -> {
             // Pass control to the controller or navigate to the next page
             // Example: navigating to the game setup input page
             controller.showGameSettingsPage();
         });
         JButton instructionsButton = new JButton("Instructions");
+        instructionsButton.setFont(new Font("Roboto", Font.BOLD, 20)); //change the font and its size
         instructionsButton.addActionListener(e -> controller.showInstructionsPage("WELCOME"));
 
         // Adding a button that takes user to the teacher page where questions are answered.
         JButton teacherPageButton = new JButton("Teacher Home");
+        teacherPageButton.setFont(new Font("Roboto", Font.BOLD, 20)); //change the font and its size
         // TODO: make action listener and actual page class for teacher homepage.
         buttonPanel.add(instructionsButton);
         buttonPanel.add(nextButton);
         buttonPanel.add(teacherPageButton);
-        
+
         // Add components to the frame
         add(welcomePanel, BorderLayout.NORTH);
         add(imagePanel, BorderLayout.SOUTH);

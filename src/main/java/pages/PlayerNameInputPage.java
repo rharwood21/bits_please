@@ -33,11 +33,25 @@ public class PlayerNameInputPage extends JFrame {
         ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
         this.setIconImage(image.getImage());  //change icon of frame
         JLabel nameLabel = new JLabel("Enter player names:", SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        nameLabel.setFont(new Font("Roboto", Font.BOLD, 30));
+        nameLabel.setBorder(new EmptyBorder(screenWidth/10,0,0,0));
+
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setBackground(new Color(248, 237, 212));
+        titlePanel.add(nameLabel);
+        add(titlePanel, BorderLayout.NORTH);
+
+        int textFieldSize = 24;
+        Font textFieldFont = new Font("Roboto", Font.PLAIN, 24);
+
+
         JLabel gapLabel = new JLabel(" ");
         nameFields = new JTextField[4];
         for (int i = 0; i < nameFields.length; i++) {
-            nameFields[i] = new JTextField(15);
+            nameFields[i] = new JTextField(textFieldSize);
+            nameFields[i].setFont(textFieldFont);  // Add this line
+            nameFields[i].setHorizontalAlignment(JTextField.CENTER);
         }
 
         JPanel buttonPanel = new JPanel();
@@ -72,13 +86,16 @@ public class PlayerNameInputPage extends JFrame {
         // Create a panel to hold the input components
         JPanel inputPanel = new JPanel();
         inputPanel.setBackground(new Color(248, 237, 212));
-        inputPanel.setBorder(new EmptyBorder(screenWidth/8,screenHeight/2,screenWidth/8,screenHeight/2));
+        inputPanel.setBorder(new EmptyBorder(screenWidth/12,screenHeight/2,screenWidth/6,screenHeight/2));
 
-        inputPanel.setLayout(new GridLayout(8, 1));
+        inputPanel.setLayout(new GridLayout(4, 1));
 //        inputPanel.add(gapLabel);
         int playerNum = 1;
+        Font labelFont = new Font("Roboto", Font.PLAIN, 24);
         for (JTextField nameField : nameFields) {
-            inputPanel.add(new JLabel("Player " + playerNum));
+            JLabel playerLabel = new JLabel("Player " + playerNum);
+            playerLabel.setFont(labelFont);
+            inputPanel.add(playerLabel);
             playerNum++;
             inputPanel.add(nameField);
         }
