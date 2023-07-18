@@ -33,7 +33,7 @@ public class GameplayPage extends JFrame {
         // Create components
         ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
         this.setIconImage(image.getImage());  //change icon of frame
-        JLabel gameLabel = new JLabel("Gameplay Page");
+        //JLabel gameLabel = new JLabel("Gameplay Page");
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel gameBoardPanel = new JPanel(new GridLayout(9, 9));
         gameBoardPanel.setBorder(new LineBorder(Color.BLACK));
@@ -69,13 +69,13 @@ public class GameplayPage extends JFrame {
 
         // Add components to the panels
         mainPanel.add(playerPanel, BorderLayout.SOUTH);
-        mainPanel.add(buttonPanel, BorderLayout.CENTER);
-        mainPanel.add(gameBoardPanel, BorderLayout.NORTH);
+        mainPanel.add(buttonPanel, BorderLayout.NORTH);
+        mainPanel.add(gameBoardPanel, BorderLayout.CENTER);
 
         // Add components to the frame
-        add(gameLabel, BorderLayout.CENTER);
+        //add(gameLabel, BorderLayout.CENTER);
         //add(playerPanel, BorderLayout.SOUTH);
-        add(mainPanel, BorderLayout.SOUTH);
+        add(mainPanel, BorderLayout.CENTER);
 
 
         // Set frame properties
