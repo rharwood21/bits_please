@@ -95,10 +95,26 @@ public class GameplayPage extends JFrame {
         // Ignoring dead squares which are not drawn. This space is used for player score graphics.
         JButton squareGraphics = new JButton();
         squareGraphics.setMargin(squareMargin);
-        //squareGraphics.setLocation(square.getBoardPosition().x * 5, square.getBoardPosition().y * 5);
-        //squareGraphics.setSize(100, 150);
+
         ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
         squareGraphics.setIcon(icon);
+
+        // Switch to assign labels to some squares
+        String squareLabelText = "";
+        switch (square.getType()) {
+            case "Roll":
+                squareLabelText = "Roll Again";
+                break;
+            case "TC":
+                squareLabelText = "Trivial Compute";
+                break;
+            case "HQ":
+                squareLabelText = "HQ";
+                break;
+            default:
+                squareLabelText = "";
+        }
+        squareGraphics.add(new JLabel(squareLabelText));
         if (!square.getType().equals("Dead")) {
             switch (square.getColor()) {
                 case "R":
@@ -114,7 +130,7 @@ public class GameplayPage extends JFrame {
                     squareGraphics.setBackground(Color.green);
                     break;
                 case "W":
-                    squareGraphics.setBackground(Color.GRAY);
+                    squareGraphics.setBackground(Color.white);
                     break;
                 case "P":
                     squareGraphics.setBackground(Color.PINK);
@@ -125,6 +141,7 @@ public class GameplayPage extends JFrame {
 
         }
         gameBoardSquares[square.getBoardPosition().x][square.getBoardPosition().y] = squareGraphics;
+
     }
 
     // Method to update the player names in the GUI

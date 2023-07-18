@@ -18,9 +18,10 @@ public class GameBoard {
         String color = ""; // Default color is 'W' for White.
         String type = "";
         int HQSwitcher = 0;
+        int k = 0;
         for (int i = 0; i < numCols; i++) {
             for (int j = 0; j < numRows; j++) {
-                switch (i*j % 4) {
+                switch (k % 4) {
                     case 0:
                         color = "R";
                         break;
@@ -34,6 +35,7 @@ public class GameBoard {
                         color = "G";
                         break;
                 }
+                k++;
                 if ((i == 0 || i == 8) && (j == 0 || j == 8)) {
                     type = "Roll";
                     color = "P";
@@ -74,7 +76,7 @@ public class GameBoard {
                     type = "Q";
                 }
                 squares[i][j] = new Square(new Point(i, j), color, type);
-                // System.out.print(color); // Debugging for Text version of Board
+                //System.out.print(color); // Debugging for Text version of Board
             }
             //System.out.println(); // Debugging for Text version of board
         }
