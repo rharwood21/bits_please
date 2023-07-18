@@ -37,22 +37,25 @@ public class InstructionsPage extends JFrame {
         JLabel objectTitleLabel = new JLabel("Object of the Game", SwingConstants.CENTER);
         objectTitleLabel.setFont(new Font("Roboto", Font.BOLD, 20));
         // TODO undo hardcode
-        JTextArea objectText = setTextArea("To move along the circular track and the spokes correctly answering " +
-                "questions, and to collect colored wedges for correctly answering questions in each of the four category" +
-                " headquarters (at the base of each spoke). To win, a player returns to the square hub and correctly " +
-                "answers the game-winning question in a category chosen by the other players.");
+        JTextArea objectText = setTextArea("The objective of Trivial Compute is to correctly answer questions from four selected categories. " +
+                "Each player moves around the game board, earning colored wedges by correctly answering questions " +
+                "at each category headquarters. The first player to collect all four colored wedges and correctly " +
+                "answer a final question in the center hub wins the game.");
         JLabel setupLabel = new JLabel("Game Setup", SwingConstants.CENTER);
         setupLabel.setFont(new Font("Roboto", Font.BOLD, 20));
-        JTextArea setupText = setTextArea("Select four unique categories and corresponding colors. You can select " +
-                "either the default questions or use categories with questions created by teachers. Roll the die; the " +
-                "high roller goes first (the system does this automatically. Al players start in the square hub at the " +
-                "center of the board and move down one of the spokes and out onto the square track. Play moves in either" +
-                " direction around the track, clockwise or counterclockwise. ");
+        JTextArea setupText = setTextArea("To start the game, players choose the four unique categories of questions and assign colors to each category. " +
+                "Players can select either the default questions or use categories with questions created by teachers. " +
+                "These will be displayed on the game board. Players then register their names, and the game automatically " +
+                "rolls the die to decide who goes first. " +
+                "All players start in the central hub square of the board and move out along one of the spokes towards the outer track. " +
+                "From there, players can choose to move in any direction along the track - up, down, left, or right.");
+
         JLabel gamePlayLabel = new JLabel("Game Play", SwingConstants.CENTER);
         gamePlayLabel.setFont(new Font("Roboto", Font.BOLD, 20));
         JLabel firstLabel = new JLabel("First Turn", SwingConstants.CENTER);
         firstLabel.setFont(new Font("Roboto", Font.BOLD, 16));
-        JTextArea firstText = setTextArea("On your first turn, roll the die and select which color /category you want" +
+        JTextArea firstText = setTextArea(
+                "On your first turn, roll the die and select which color /category you want" +
                 " to land on and which of the four spokes you'll move down. If you roll a 4, you will immediately land " +
                 "on a category headquarters and try for a scoring wedge of that color. Whichever color you land on, the " +
                 "game will prompt you with a question in that category. Once you answer the question orally, choose the " +
@@ -61,11 +64,11 @@ public class InstructionsPage extends JFrame {
                 " moving that number of spaces. ");
         JLabel notesLabel = new JLabel("Notes", SwingConstants.CENTER);
         notesLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        JTextArea notesText = setTextArea("On each roll of the die, you may select which direction you want to move " +
-                "along the track as you attempt to move towards category headquarters to try for scoring wedges in each " +
-                "of the four colors. \n" + "You may not move both forward and back on the track (or on a spoke) " +
-                "in the same move. \n" + "You must move the number of spaces shown on the die.  \n" +
-                "If you answer incorrectly, play passes to the player on your left.");
+        JTextArea notesText = setTextArea("A player can choose their direction of travel with each roll of the die. \n" +
+                "Players may not move both forward and backward in the same turn. \n" +
+                "If a player answers a question incorrectly, their turn ends, and play passes to the next player. \n" +
+                "When a player lands on a category headquarters and answers correctly, they receive a colored wedge corresponding to the category. \n" +
+                "If they already have that color in their score, they simply roll the die again.");
         JLabel subLabel = new JLabel("Subsequent Turns", SwingConstants.CENTER);
         subLabel.setFont(new Font("Roboto", Font.BOLD, 16));
         JTextArea subText = setTextArea("Whenever you answer a category headquarters question correctly, the game " +
