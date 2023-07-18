@@ -2,7 +2,9 @@ package pages;
 
 import game.*;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Represents the gameplay page of the Trivial Compute Game.
@@ -12,6 +14,8 @@ public class GameplayPage extends JFrame {
     private GameController controller;
     private JPanel playerPanel;
     private GameBoard board = new GameBoard();
+    private JButton[][] gameBoardSquares = new JButton[9][9];
+    private JPanel gameBoardPanel;
 
     /**
      * Constructs a pages.GameplayPage object.
@@ -31,11 +35,18 @@ public class GameplayPage extends JFrame {
         this.setIconImage(image.getImage());  //change icon of frame
         JLabel gameLabel = new JLabel("Gameplay Page");
         JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel gameBoardPanel = new JPanel(new GridLayout(9, 9));
+        gameBoardPanel.setBorder(new LineBorder(Color.BLACK));
+        gameBoardPanel.setBounds(0, 0, 600, 600);
+        Insets squareMargin = new Insets(0,0,0,0);
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                drawSquare(board.getSquare(i,j), mainPanel);
+                drawSquare(board.getSquare(i,j), mainPanel, squareMargin);
+                gameBoardPanel.add(gameBoardSquares[i][j]);
             }
         }
+
+
 
 
         // Create a panel for the player names
@@ -59,11 +70,13 @@ public class GameplayPage extends JFrame {
         // Add components to the panels
         mainPanel.add(playerPanel, BorderLayout.SOUTH);
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        mainPanel.add(gameBoardPanel, BorderLayout.NORTH);
 
         // Add components to the frame
         add(gameLabel, BorderLayout.CENTER);
         //add(playerPanel, BorderLayout.SOUTH);
         add(mainPanel, BorderLayout.SOUTH);
+
 
         // Set frame properties
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,12 +90,16 @@ public class GameplayPage extends JFrame {
         setLocationRelativeTo(null); // Center the frame on the screen
     }
 
-    private void drawSquare(Square square, JPanel mainPanel) {
+    private void drawSquare(Square square, JPanel mainPanel, Insets squareMargin) {
         // TODO: Draw a square in the GamePanel(?) for each square. Squares contain position and color so this shouldn't be so bad.
         // Ignoring dead squares which are not drawn. This space is used for player score graphics.
-        JPanel squareGraphics = new JPanel();
-        squareGraphics.setLocation(square.getBoardPosition().x * 5, square.getBoardPosition().y * 5);
-        squareGraphics.setSize(100, 150);
+        JButton squareGraphics = new JButton();
+        squareGraphics.setMargin(squareMargin);
+        //squareGraphics.setLocation(square.getBoardPosition().x * 5, square.getBoardPosition().y * 5);
+        //squareGraphics.setSize(100, 150);
+        ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
+        squareGraphics.setIcon(icon);
+        System.out.println(square.getColor());
         if (!square.getType().equals("Dead")) {
             switch (square.getColor()) {
                 case "R":
@@ -101,7 +118,7 @@ public class GameplayPage extends JFrame {
             }
 
         }
-        mainPanel.add(squareGraphics);
+        gameBoardSquares[square.getBoardPosition().x][square.getBoardPosition().y] = squareGraphics;
     }
 
     // Method to update the player names in the GUI
