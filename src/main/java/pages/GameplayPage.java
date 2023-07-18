@@ -113,6 +113,12 @@ public class GameplayPage extends JFrame {
                 case "G":
                     squareGraphics.setBackground(Color.green);
                     break;
+                case "W":
+                    squareGraphics.setBackground(Color.GRAY);
+                    break;
+                case "P":
+                    squareGraphics.setBackground(Color.PINK);
+                    break;
                 default:
                     squareGraphics.setBackground(Color.white);
             }

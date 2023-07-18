@@ -36,6 +36,7 @@ public class GameBoard {
                 }
                 if ((i == 0 || i == 8) && (j == 0 || j == 8)) {
                     type = "Roll";
+                    color = "P";
                     //TODO: make enums for types and colors
                 } else if ((i == 0 && j == 4) ||
                         (i == 4 && j == 0) ||
