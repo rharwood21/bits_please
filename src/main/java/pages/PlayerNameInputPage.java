@@ -2,6 +2,7 @@ package pages;
 
 import game.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -24,16 +25,23 @@ public class PlayerNameInputPage extends JFrame {
         // Set the layout manager
         setLayout(new BorderLayout());
 
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = (int) (screenSize.getWidth() * 0.75);
+        int screenHeight = (int) (screenSize.getHeight() * 0.75);
+
         // Create components
         ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
         this.setIconImage(image.getImage());  //change icon of frame
-        JLabel nameLabel = new JLabel("Enter player names:");
+        JLabel nameLabel = new JLabel("Enter player names:", SwingConstants.CENTER);
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel gapLabel = new JLabel(" ");
         nameFields = new JTextField[4];
         for (int i = 0; i < nameFields.length; i++) {
             nameFields[i] = new JTextField(15);
         }
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(248, 237, 212));
         JButton nextButton = new JButton("Next");
         nextButton.addActionListener(e -> {
             PlayerData.flushPlayerNames();
@@ -63,9 +71,15 @@ public class PlayerNameInputPage extends JFrame {
 
         // Create a panel to hold the input components
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(0, 2));
-        inputPanel.add(nameLabel);
+        inputPanel.setBackground(new Color(248, 237, 212));
+        inputPanel.setBorder(new EmptyBorder(screenWidth/8,screenHeight/2,screenWidth/8,screenHeight/2));
+
+        inputPanel.setLayout(new GridLayout(8, 1));
+//        inputPanel.add(gapLabel);
+        int playerNum = 1;
         for (JTextField nameField : nameFields) {
+            inputPanel.add(new JLabel("Player " + playerNum));
+            playerNum++;
             inputPanel.add(nameField);
         }
 
@@ -77,9 +91,6 @@ public class PlayerNameInputPage extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set the size to 75% of the screen's height and width
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int screenWidth = (int) (screenSize.getWidth() * 0.75);
-        int screenHeight = (int) (screenSize.getHeight() * 0.75);
         setSize(screenWidth, screenHeight);
 
         setLocationRelativeTo(null); // Center the frame on the screen

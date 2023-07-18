@@ -4,6 +4,7 @@ import game.GameController;
 import game.GameData;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -28,16 +29,25 @@ public class GameSettingsPage extends JFrame {
 		// Set the layout manager
 		setLayout(new BorderLayout());
 
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int screenWidth = (int) (screenSize.getWidth() * 0.75);
+		int screenHeight = (int) (screenSize.getHeight() * 0.75);
+
 		// Create components
 		ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
 		this.setIconImage(image.getImage());  //change icon of frame
 		JLabel nameLabel = new JLabel("Select categories and colors:");
+		nameLabel.setFont(new Font("Arial", Font.PLAIN, 24));
 		nameLabel.setVisible(true);
 		JPanel headerPanel = new JPanel();
+		headerPanel.setBackground(new Color(248, 237, 212));
+		headerPanel.setBorder(new EmptyBorder(screenWidth/10,0,0,0));
 		headerPanel.add(nameLabel);
 
 		JPanel cbPanel = new JPanel();
+		cbPanel.setBackground(new Color(248, 237, 212));
 		cbPanel.setLayout(new GridLayout(6, 2));
+		cbPanel.setBorder(new EmptyBorder(0,screenHeight/3,screenWidth/8,screenHeight/3));
 
 		// hardcode category options for now
 		String[] subjectChoices = { "History", "Math", "Science", "English" };
@@ -101,6 +111,7 @@ public class GameSettingsPage extends JFrame {
 		cbPanel.add(checkbox);
 
 		JPanel buttonPanel = new JPanel();
+		buttonPanel.setBackground(new Color(248, 237, 212));
 
 		JButton nextButton = new JButton("Next");
 		nextButton.addActionListener(e -> {
@@ -138,9 +149,6 @@ public class GameSettingsPage extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Set the size to 75% of the screen's height and width
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int screenWidth = (int) (screenSize.getWidth() * 0.75);
-		int screenHeight = (int) (screenSize.getHeight() * 0.75);
 		setSize(screenWidth, screenHeight);
 
 		setLocationRelativeTo(null); // Center the frame on the screen
