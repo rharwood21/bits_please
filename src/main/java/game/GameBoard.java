@@ -14,6 +14,7 @@ public class GameBoard {
         *
         *
         * */
+        squares = new Square[numCols][numRows];
         String color = ""; // Default color is 'W' for White.
         String type = "";
         int HQSwitcher = 0;
