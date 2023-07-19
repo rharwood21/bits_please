@@ -39,6 +39,10 @@ public class QuestionAnswerPage extends JFrame {
         categoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
         questionAnswer.setHorizontalAlignment(SwingConstants.CENTER);
 
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> controller.showGameplayPage());
+
+        topPanel.add(backButton);
         topPanel.add(questionAnswerLabel);
         topPanel.add(categoryLabel);
 

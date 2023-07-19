@@ -66,6 +66,12 @@ public class GameplayPage extends JFrame {
         instructionsButton.addActionListener(e -> controller.showInstructionsPage("GAMEPLAY"));
         buttonPanel.add(instructionsButton);
         buttonPanel.add(nextButton);
+        // REMOVE BELOW ME
+        JButton showAQuestion = new JButton("Show a Question");
+        showAQuestion.addActionListener(e -> controller.showQuestionAnswerPage());
+        buttonPanel.add(showAQuestion);
+        // REMOVE ABOVE ME
+
 
         // Add components to the panels
         mainPanel.add(playerPanel, BorderLayout.SOUTH);
