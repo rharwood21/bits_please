@@ -4,6 +4,7 @@ import game.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Represents the player name input page of the Trivial Compute Game.
@@ -12,7 +13,12 @@ import java.awt.*;
 public class PlayerNameInputPage extends JFrame {
     private GameController controller;
     private JTextField[] nameFields;
+    private JComboBox<String>[] colorCBList;
+
     private String[] playerNames = new String[4];
+    private String[] playerColors = new String[4];
+
+
     /**
      * Constructs a pages.PlayerNameInputPage object.
      *
@@ -61,21 +67,34 @@ public class PlayerNameInputPage extends JFrame {
         nextButton.addActionListener(e -> {
             // For each new game, there shall be new playerData.
             PlayerData.flushPlayerNames();
+            PlayerData.flushPlayerColors();
             int numPlayers = 0;
+
             for (int i = 0; i < nameFields.length; i++) {
                 String playerNameTemp = nameFields[i].getText();
                 // If the field is empty, don't make a player
                 if (!playerNameTemp.trim().isEmpty()) {
                     playerNames[i] = playerNameTemp;
+                    playerColors[i] = (String) colorCBList[i].getSelectedItem();
                     numPlayers++;
                 }
             }
+
             // Making a new PlayerData instance with all our new player names entered by the user
-            PlayerData playerData = new PlayerData(numPlayers, playerNames);
+            PlayerData playerData = new PlayerData(numPlayers, playerNames, playerColors);
 
             int currentPlayers = PlayerData.getPlayerCount();
+            int uniqColors = PlayerData.getUniqueColorCount();
+            System.out.println(uniqColors + " " + currentPlayers + " "  + playerNames[0] + " " + playerNames[1]  + " " + playerNames[2] + " " + playerNames[3]
+                    + " " + playerColors[0] + " " + playerColors[1]+ " " + playerColors[2]+ " " + playerColors[3]);
+
             if (currentPlayers < 2 || currentPlayers > 4){
                 JOptionPane.showMessageDialog(null, "Invalid Number of Players!\nPlease input 2-4 names.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Edge case issue: if there are two players with the same color and the empty last two are different
+            if (uniqColors < currentPlayers) {
+                JOptionPane.showMessageDialog(null, "Colors must be unique!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             // Pass player names to the controller or navigate to the next page
@@ -96,16 +115,32 @@ public class PlayerNameInputPage extends JFrame {
         inputPanel.setBackground(new Color(248, 237, 212));
         inputPanel.setBorder(new EmptyBorder(screenWidth/12,screenHeight/2,screenWidth/6,screenHeight/2));
 
-        inputPanel.setLayout(new GridLayout(4, 1));
+        inputPanel.setLayout(new GridLayout(4, 3));
 //        inputPanel.add(gapLabel);
         int playerNum = 1;
         Font labelFont = new Font("Roboto", Font.PLAIN, 24);
+        // set colors
+        String[] colorChoices = { "blue", "red", "green", "yellow" };
+        JComboBox<String> colorCB = setColorOptions(colorChoices,0);
+        JComboBox<String> color2CB = setColorOptions(colorChoices, 1);
+        JComboBox<String> color3CB = setColorOptions(colorChoices, 2);
+        JComboBox<String> color4CB = setColorOptions(colorChoices, 3);
+        colorCBList = new JComboBox[]{colorCB, color2CB, color3CB, color4CB};
+
         for (JTextField nameField : nameFields) {
             JLabel playerLabel = new JLabel("Player " + playerNum);
+
+            // add player label
             playerLabel.setFont(labelFont);
             inputPanel.add(playerLabel);
-            playerNum++;
+
+            // add player name input
             inputPanel.add(nameField);
+
+            // add player color input
+            inputPanel.add(colorCBList[playerNum-1]);
+
+            playerNum++;
         }
 
         // Add components to the frame
@@ -120,4 +155,12 @@ public class PlayerNameInputPage extends JFrame {
 
         setLocationRelativeTo(null); // Center the frame on the screen
     }
+
+    private JComboBox<String> setColorOptions(String[] colorChoices, int i) {
+        JComboBox<String> colorCB = new JComboBox<>(colorChoices);
+        colorCB.setSelectedIndex(i);
+        colorCB.setVisible(true);
+        return colorCB;
+    }
+
 }
