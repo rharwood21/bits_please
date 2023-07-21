@@ -33,21 +33,26 @@ public class GameplayPage extends JFrame {
         // Create components
         ImageIcon image = new ImageIcon("BitsPleaseLogo.jpg");
         this.setIconImage(image.getImage());  //change icon of frame
-        //JLabel gameLabel = new JLabel("Gameplay Page");
+
         JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel gameBoardPanel = new JPanel(new GridLayout(9, 9));
+        // Create the gameBoardPanel which will hold all of the buttons / game squares. The GridLayout is passed as
+        // input to hold all of the game squares as a 9 x 9 grid.
+        JPanel gameBoardPanel = new JPanel(new GridLayout(0, 9));
         gameBoardPanel.setBorder(new LineBorder(Color.BLACK));
         gameBoardPanel.setBounds(0, 0, 600, 600);
         Insets squareMargin = new Insets(0,0,0,0);
+
+        // For each square in the "board" instance of the GameBoard class,
+        // a graphical square will be drawn as a JButton.
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                drawSquare(board.getSquare(i,j), mainPanel, squareMargin);
-                gameBoardPanel.add(gameBoardSquares[i][j]);
+                // Ignore squares that are type="Dead". This space will be used to hold player score graphics.
+                //if (!board.getSquare(i,j).getType().equals("Dead")) {
+                    drawSquare(board.getSquare(i, j), squareMargin);
+                    gameBoardPanel.add(gameBoardSquares[i][j]);
+                //}
             }
         }
-
-
-
 
         // Create a panel for the player names
         playerPanel = new JPanel();
@@ -73,14 +78,12 @@ public class GameplayPage extends JFrame {
         // REMOVE ABOVE ME
 
 
-        // Add components to the panels
+        // Add component panels to the mainPanel.
         mainPanel.add(playerPanel, BorderLayout.SOUTH);
         mainPanel.add(buttonPanel, BorderLayout.NORTH);
         mainPanel.add(gameBoardPanel, BorderLayout.CENTER);
 
         // Add components to the frame
-        //add(gameLabel, BorderLayout.CENTER);
-        //add(playerPanel, BorderLayout.SOUTH);
         add(mainPanel, BorderLayout.CENTER);
 
 
@@ -96,16 +99,20 @@ public class GameplayPage extends JFrame {
         setLocationRelativeTo(null); // Center the frame on the screen
     }
 
-    private void drawSquare(Square square, JPanel mainPanel, Insets squareMargin) {
-        // TODO: Draw a square in the GamePanel(?) for each square. Squares contain position and color so this shouldn't be so bad.
-        // Ignoring dead squares which are not drawn. This space is used for player score graphics.
+    /** The drawSquare method transforms Square objects into JButtons to be added to the gameBoardSquares
+     *  JButton[][] private variable within the GamePlayPage class.
+     * @param square - this instance of the Square class contains all the necessary information to illustrate a square
+     *                 that represents a tile of the trivial compute gameboard.
+     * @param squareMargin - Helps with the construction of the Jbuttons.
+     */
+    private void drawSquare(Square square, Insets squareMargin) {
         JButton squareGraphics = new JButton();
         squareGraphics.setMargin(squareMargin);
 
         ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
         squareGraphics.setIcon(icon);
 
-        // Switch to assign labels to some squares
+        // Switch to assign labels to some special squares
         String squareLabelText = "";
         switch (square.getType()) {
             case "Roll":
@@ -121,6 +128,9 @@ public class GameplayPage extends JFrame {
                 squareLabelText = "";
         }
         squareGraphics.add(new JLabel(squareLabelText));
+        squareGraphics.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Ignoring dead squares which are not drawn. This space is used for player score graphics.
         if (!square.getType().equals("Dead")) {
             switch (square.getColor()) {
                 case "R":
@@ -136,19 +146,21 @@ public class GameplayPage extends JFrame {
                     squareGraphics.setBackground(Color.green);
                     break;
                 case "W":
+                    // Should only be the Trivial Compute Square in the middle
                     squareGraphics.setBackground(Color.white);
                     break;
                 case "P":
+                    // Only the Roll Again Squares on the corners.
                     squareGraphics.setBackground(Color.PINK);
                     break;
                 default:
-                    squareGraphics.setBackground(Color.white);
+                    //squareGraphics.setBackground(Color.white);
             }
-
         }
+        // Finally, add the JButton to gameBoardSquares.
         gameBoardSquares[square.getBoardPosition().x][square.getBoardPosition().y] = squareGraphics;
-
     }
+
 
     // Method to update the player names in the GUI
     public void updatePlayerNames() {
@@ -167,7 +179,6 @@ public class GameplayPage extends JFrame {
         }
         // Add the playerPanel back to the frame
         //add(playerPanel, BorderLayout.SOUTH);
-
         playerPanel.revalidate();
         playerPanel.repaint();
     }

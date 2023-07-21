@@ -12,6 +12,7 @@ import java.awt.*;
 public class PlayerNameInputPage extends JFrame {
     private GameController controller;
     private JTextField[] nameFields;
+    private String[] playerNames = new String[4];
     /**
      * Constructs a pages.PlayerNameInputPage object.
      *
@@ -58,11 +59,20 @@ public class PlayerNameInputPage extends JFrame {
         buttonPanel.setBackground(new Color(248, 237, 212));
         JButton nextButton = new JButton("Next");
         nextButton.addActionListener(e -> {
+            // For each new game, there shall be new playerData.
             PlayerData.flushPlayerNames();
+            int numPlayers = 0;
             for (int i = 0; i < nameFields.length; i++) {
                 String playerNameTemp = nameFields[i].getText();
-                PlayerData.setPlayerName(i, playerNameTemp);
+                // If the field is empty, don't make a player
+                if (!playerNameTemp.trim().isEmpty()) {
+                    playerNames[i] = playerNameTemp;
+                    numPlayers++;
+                }
             }
+            // Making a new PlayerData instance with all our new player names entered by the user
+            PlayerData playerData = new PlayerData(numPlayers, playerNames);
+
             int currentPlayers = PlayerData.getPlayerCount();
             if (currentPlayers < 2 || currentPlayers > 4){
                 JOptionPane.showMessageDialog(null, "Invalid Number of Players!\nPlease input 2-4 names.", "Error", JOptionPane.ERROR_MESSAGE);
