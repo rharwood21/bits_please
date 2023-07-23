@@ -27,7 +27,7 @@ public class QuestionAnswerPage extends JFrame {
         this.setIconImage(image.getImage());  //change icon of frame
 
         // Set the layout manager
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout()); //comment for test push
 
         // Create components
         JPanel topPanel = new JPanel(new GridLayout(0, 1));
