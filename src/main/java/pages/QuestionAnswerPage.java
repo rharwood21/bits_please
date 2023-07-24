@@ -3,93 +3,106 @@ package pages;
 import game.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  * The question and answer page of the Trivial Compute game
- * Displays questions from category, answer is checked, opponents vote on answer's correctness
+ * Displays questions from category, answer is checked, opponents vote on
+ * answer's correctness
  */
 public class QuestionAnswerPage extends JFrame {
-    private GameController controller;
-    /**
-     * Constructs a pages.QuestionAnswerPage object.
-     *
-     * @param controller The game controller instance for managing the navigation.
-     */
-    public QuestionAnswerPage(GameController controller) {
-        super("Question And Answer Page");
+   private GameController controller;
+   private BufferedImage image;
 
-        this.controller = controller;
+   /**
+    * Constructs a pages.QuestionAnswerPage object.
+    *
+    * @param controller The game controller instance for managing the navigation.
+    */
+   public QuestionAnswerPage(GameController controller) {
+      super("Question And Answer Page");
 
-        this.setTitle("Question And Answer Page");  //sets title of frame
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        this.setResizable(false);  //prevent frame from being resized
-        ImageIcon image = new ImageIcon("/images/BitsPleaseLogo.jpg");
-        this.setIconImage(image.getImage());  //change icon of frame
+      this.controller = controller;
 
-        // Set the layout manager
-        setLayout(new BorderLayout()); //comment for test push
+      this.setTitle("Question And Answer Page"); // sets title of frame
+      this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      this.setResizable(false); // prevent frame from being resized
 
-        // Create components
-        JPanel topPanel = new JPanel(new GridLayout(0, 1));
-        JLabel questionAnswerLabel = new JLabel("Question");
-        JLabel categoryLabel = new JLabel("Category: Science");
-        JLabel questionAnswer = new JLabel("What is the name of this course?");
+      // Load the image
+      try {
+         image = ImageIO.read(getClass().getResource("/images/BitsPleaseLogo.jpg")); // Replace with your image path
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+      ImageIcon pageIcon = new ImageIcon(image);
+      this.setIconImage(pageIcon.getImage()); // change icon of frame
 
-        questionAnswerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        categoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        questionAnswer.setHorizontalAlignment(SwingConstants.CENTER);
+      // Set the layout manager
+      setLayout(new BorderLayout()); // comment for test push
 
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> controller.showGameplayPage());
+      // Create components
+      JPanel topPanel = new JPanel(new GridLayout(0, 1));
+      JLabel questionAnswerLabel = new JLabel("Question");
+      JLabel categoryLabel = new JLabel("Category: Science");
+      JLabel questionAnswer = new JLabel("What is the name of this course?");
 
-        topPanel.add(backButton);
-        topPanel.add(questionAnswerLabel);
-        topPanel.add(categoryLabel);
+      questionAnswerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      categoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      questionAnswer.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JPanel buttonPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel1.setBorder(BorderFactory.createTitledBorder("Answer Verbally Before Checking Answer"));
-        JButton checkAnswerButton = new JButton("Check Answer");
-        buttonPanel1.add(checkAnswerButton);
-        JButton correct = new JButton("Correct");
-        JButton incorrect = new JButton("Incorrect");
+      JButton backButton = new JButton("Back");
+      backButton.addActionListener(e -> controller.showGameplayPage());
 
-        checkAnswerButton.addActionListener(e -> {
-       	   questionAnswerLabel.setText("Answer");
-       	   questionAnswer.setText("Foundations of Software Engineering");
-       	   remove(buttonPanel1);
-           JPanel buttonPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-           buttonPanel2.setBorder(BorderFactory.createTitledBorder("Opponents To Vote"));
-           buttonPanel2.add(correct);
-           buttonPanel2.add(incorrect);
-           topPanel.remove(categoryLabel);
-           add(buttonPanel2, BorderLayout.SOUTH);
-           revalidate();
-           repaint();
-        });
+      topPanel.add(backButton);
+      topPanel.add(questionAnswerLabel);
+      topPanel.add(categoryLabel);
 
-        correct.addActionListener(e -> {
-           questionAnswer.setText("You got it right.");
-           revalidate();
-           repaint();
-        });
+      JPanel buttonPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+      buttonPanel1.setBorder(BorderFactory.createTitledBorder("Answer Verbally Before Checking Answer"));
+      JButton checkAnswerButton = new JButton("Check Answer");
+      buttonPanel1.add(checkAnswerButton);
+      JButton correct = new JButton("Correct");
+      JButton incorrect = new JButton("Incorrect");
 
-        incorrect.addActionListener(e -> {
-           questionAnswer.setText("You answered incorrectly. Next player's turn.");
-           revalidate();
-           repaint();
-        });
+      checkAnswerButton.addActionListener(e -> {
+         questionAnswerLabel.setText("Answer");
+         questionAnswer.setText("Foundations of Software Engineering");
+         remove(buttonPanel1);
+         JPanel buttonPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+         buttonPanel2.setBorder(BorderFactory.createTitledBorder("Opponents To Vote"));
+         buttonPanel2.add(correct);
+         buttonPanel2.add(incorrect);
+         topPanel.remove(categoryLabel);
+         add(buttonPanel2, BorderLayout.SOUTH);
+         revalidate();
+         repaint();
+      });
 
-        // Add components to the frame
-        add(topPanel, BorderLayout.NORTH);
-        add(questionAnswer, BorderLayout.CENTER);
-        add(buttonPanel1, BorderLayout.SOUTH);
+      correct.addActionListener(e -> {
+         questionAnswer.setText("You got it right.");
+         revalidate();
+         repaint();
+      });
 
-        // Set the size to 50% of the screen's height and width
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int screenWidth = (int) (screenSize.getWidth() * 0.5);
-        int screenHeight = (int) (screenSize.getHeight() * 0.5);
-        setSize(screenWidth, screenHeight);
-        setLocationRelativeTo(null); // Center the frame on the screen
-        //setVisible(true);
-    }
+      incorrect.addActionListener(e -> {
+         questionAnswer.setText("You answered incorrectly. Next player's turn.");
+         revalidate();
+         repaint();
+      });
+
+      // Add components to the frame
+      add(topPanel, BorderLayout.NORTH);
+      add(questionAnswer, BorderLayout.CENTER);
+      add(buttonPanel1, BorderLayout.SOUTH);
+
+      // Set the size to 50% of the screen's height and width
+      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      int screenWidth = (int) (screenSize.getWidth() * 0.5);
+      int screenHeight = (int) (screenSize.getHeight() * 0.5);
+      setSize(screenWidth, screenHeight);
+      setLocationRelativeTo(null); // Center the frame on the screen
+      // setVisible(true);
+   }
 }
