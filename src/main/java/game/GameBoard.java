@@ -36,7 +36,7 @@ public class GameBoard {
                         color = "G";        // G - Green
                         break;
                 }
-                k++;
+
                 // Making the corners of the board in to Roll Again Squares.
                 if ((i == 0 || i == 8) && (j == 0 || j == 8)) {
                     type = "Roll";      // Roll - short for Roll Again
@@ -54,11 +54,11 @@ public class GameBoard {
                             HQSwitcher++;
                             break;
                         case 1:
-                            color = "Y";
+                            color = "B";
                             HQSwitcher++;
                             break;
                         case 2:
-                            color = "B";
+                            color = "Y";
                             HQSwitcher++;
                             break;
                         case 3:
@@ -72,7 +72,7 @@ public class GameBoard {
                     color = "W";
                 } else if (
                         ((0 < i && i < 4) || (4 < i && i < 8))
-                    && ((0 < j && j < 4) || (4 < j && j < 8))
+                                && ((0 < j && j < 4) || (4 < j && j < 8))
                 ) {
                     // Four different 3x3 sections of the board do not contain game squares
                     // These "Dead" areas will be home to the players' score graphics.
@@ -80,6 +80,7 @@ public class GameBoard {
                     //color = "W";        // Color won't matter but they can be white.
                 } else {
                     type = "Q";         // Q - Normal Question square.
+                    k++;    // Increment k only for "Q" type squares
                 }
                 // Adding the new square to the array.
                 squares[i][j] = new Square(new Point(i, j), color, type);
