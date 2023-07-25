@@ -146,7 +146,11 @@ public class GameplayPage extends JFrame {
 
       // Ignoring dead squares which are not drawn. This space is used for player
       // score graphics.
-      if (!square.getType().equals("Dead")) {
+      if (square.getType().equals("Dead")) {
+         squareGraphics.setBackground(Color.WHITE);
+         squareGraphics.setEnabled(false);
+      }
+      else {
          switch (square.getColor()) {
             case "R":
                squareGraphics.setBackground(Color.red);
