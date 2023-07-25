@@ -26,6 +26,12 @@ public class GameplayPage extends JFrame {
     *
     * @param controller The game controller instance for managing the navigation.
     */
+
+   Color newRed = new Color(179, 27, 27);   // Deep red
+   Color newBlue = new Color(26, 82, 118);  // Deep blue
+   Color newGreen = new Color(26, 82, 60);  // Deep green
+   Color newYellow = new Color(238, 208, 63); // Gold-toned yellow
+
    public GameplayPage(GameController controller) {
       super("Trivial Compute");
 
@@ -144,6 +150,8 @@ public class GameplayPage extends JFrame {
       squareGraphics.add(new JLabel(squareLabelText));
       squareGraphics.setHorizontalAlignment(SwingConstants.CENTER);
 
+
+
       // Ignoring dead squares which are not drawn. This space is used for player
       // score graphics.
       if (square.getType().equals("Dead")) {
@@ -153,16 +161,16 @@ public class GameplayPage extends JFrame {
       else {
          switch (square.getColor()) {
             case "R":
-               squareGraphics.setBackground(Color.red);
+               squareGraphics.setBackground(newRed);
                break;
             case "Y":
-               squareGraphics.setBackground(Color.yellow);
+               squareGraphics.setBackground(newYellow);
                break;
             case "B":
-               squareGraphics.setBackground(Color.blue);
+               squareGraphics.setBackground(newBlue);
                break;
             case "G":
-               squareGraphics.setBackground(Color.green);
+               squareGraphics.setBackground(newGreen);
                break;
             case "W":
                // Should only be the Trivial Compute Square in the middle
@@ -170,7 +178,7 @@ public class GameplayPage extends JFrame {
                break;
             case "P":
                // Only the Roll Again Squares on the corners.
-               squareGraphics.setBackground(Color.PINK);
+               squareGraphics.setBackground(Color.white);
                break;
             default:
                // squareGraphics.setBackground(Color.white);
