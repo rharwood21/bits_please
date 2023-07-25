@@ -171,9 +171,7 @@ public class GameplayPage extends JFrame {
             default:
                // squareGraphics.setBackground(Color.white);
          }
-         squareGraphics.setOpaque(true);
-         squareGraphics.setContentAreaFilled(true);
-         squareGraphics.setBorderPainted(false);
+
       }
       // Finally, add the JButton to gameBoardSquares.
       gameBoardSquares[square.getBoardPosition().x][square.getBoardPosition().y] = squareGraphics;
