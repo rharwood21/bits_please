@@ -93,7 +93,6 @@ public class GameplayPage extends JFrame {
       showAQuestion.addActionListener(e -> controller.showQuestionAnswerPage());
       buttonPanel.add(showAQuestion);
       // REMOVE ABOVE ME
-
       // Add component panels to the mainPanel.
       mainPanel.add(playerPanel, BorderLayout.SOUTH);
       mainPanel.add(buttonPanel, BorderLayout.NORTH);
@@ -107,9 +106,8 @@ public class GameplayPage extends JFrame {
 
       // Set the size to 75% of the screen's height and width
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-      int screenWidth = (int) (screenSize.getWidth() * 0.75);
-      int screenHeight = (int) (screenSize.getHeight() * 0.75);
-      setSize(screenWidth, screenHeight);
+      int size = (int) Math.min(screenSize.getWidth(), screenSize.getHeight()) * 75 / 100;
+      setSize(size, size);
 
       setLocationRelativeTo(null); // Center the frame on the screen
    }
@@ -138,7 +136,7 @@ public class GameplayPage extends JFrame {
             squareLabelText = "Roll Again";
             break;
          case "TC":
-            squareLabelText = "Trivial Compute";
+            squareLabelText = "<html><div style='text-align: center;'>Trivial<br>Compute</div></html>"; // HTML tags allow multi-line text
             break;
          case "HQ":
             squareLabelText = "HQ";
@@ -146,8 +144,14 @@ public class GameplayPage extends JFrame {
          default:
             squareLabelText = "";
       }
-      squareGraphics.add(new JLabel(squareLabelText));
-      squareGraphics.setHorizontalAlignment(SwingConstants.CENTER);
+      JLabel label = new JLabel(squareLabelText);
+      label.setFont(new Font("Century Gothic", Font.PLAIN, 12)); // Use Century Gothic font, size 12
+// Wrap label in a JPanel to center it
+      JPanel labelPanel = new JPanel(new GridBagLayout());
+      labelPanel.setOpaque(false); // Make the JPanel transparent
+      labelPanel.add(label);
+      squareGraphics.add(labelPanel);
+
 
       // Ignoring dead squares which are not drawn. This space is used for player
       // score graphics.
