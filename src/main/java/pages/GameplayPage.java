@@ -17,6 +17,7 @@ public class GameplayPage extends JFrame {
    private GameController controller;
    private JPanel playerPanel;
    private GameBoard board = new GameBoard();
+   private JDie dice = new JDie();
    private JButton[][] gameBoardSquares = new JButton[9][9];
    private JPanel gameBoardPanel;
    private BufferedImage image;
@@ -78,6 +79,7 @@ public class GameplayPage extends JFrame {
 
       // Next Button/Panel
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+      buttonPanel.add(dice);
       JButton nextButton = new JButton("Next");
       nextButton.addActionListener(e -> {
          // Pass control to the controller or navigate to the next page
@@ -86,6 +88,7 @@ public class GameplayPage extends JFrame {
       });
       JButton instructionsButton = new JButton("Instructions");
       instructionsButton.addActionListener(e -> controller.showInstructionsPage("GAMEPLAY"));
+      buttonPanel.add(dice);
       buttonPanel.add(instructionsButton);
       buttonPanel.add(nextButton);
       // REMOVE BELOW ME
@@ -94,9 +97,9 @@ public class GameplayPage extends JFrame {
       buttonPanel.add(showAQuestion);
       // REMOVE ABOVE ME
       // Add component panels to the mainPanel.
-      mainPanel.add(playerPanel, BorderLayout.SOUTH);
       mainPanel.add(buttonPanel, BorderLayout.NORTH);
       mainPanel.add(gameBoardPanel, BorderLayout.CENTER);
+      mainPanel.add(playerPanel, BorderLayout.SOUTH);
 
       // Add components to the frame
       add(mainPanel, BorderLayout.CENTER);
