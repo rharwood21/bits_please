@@ -1,6 +1,9 @@
 package game;
 
+import bits_please_api.APIRequestException;
 import pages.*;
+
+import javax.swing.*;
 
 /**
  * The game controller for managing the navigation and flow of the Trivial Compute Game.
@@ -65,6 +68,14 @@ public class GameController {
      */
     public void showGameplayPage() {
         disposePages();
+        try {
+            GameData.initializeQuestionMap(); // Initialize Questions for Gameplay
+        } catch (APIRequestException e){
+            JOptionPane.showMessageDialog(null, "Questions Not Initialized!\n" +
+                    "Please Ensure Database is up.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            return; // This return will close the application
+        }
         gameplayPage.updatePlayerNames(); // Update player names in the pages.GameplayPage
         gameplayPage.setVisible(true);
     }
@@ -79,8 +90,9 @@ public class GameController {
     /**
      * Shows the question and answer page
      */
-    public void showQuestionAnswerPage() {
+    public void showQuestionAnswerPage(Question currentQuestion) {
         disposePages();
+        questionAnswerPage.setCurrentQuestion(currentQuestion);
         questionAnswerPage.setVisible(true);
     }
     

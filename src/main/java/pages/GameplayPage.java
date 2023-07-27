@@ -1,12 +1,14 @@
 package pages;
 
 import game.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.util.Map;
 
 /**
  * Represents the gameplay page of the Trivial Compute Game.
@@ -21,6 +23,7 @@ public class GameplayPage extends JFrame {
    private JButton[][] gameBoardSquares = new JButton[9][9];
    private JPanel gameBoardPanel;
    private BufferedImage image;
+   private Map<Color, String> colorToCategoryMap = GameData.getColorToCategoryMap();
 
    /**
     * Constructs a pages.GameplayPage object.
@@ -73,7 +76,6 @@ public class GameplayPage extends JFrame {
 
       // Create a panel for the player names
       playerPanel = new JPanel();
-      // playerPanel.setLayout(new GridLayout(1, game.PlayerData.getPlayerCount()));
       // // Set the number of columns dynamically
       playerPanel.setLayout(new GridLayout(1, 4));
 
@@ -91,11 +93,7 @@ public class GameplayPage extends JFrame {
       buttonPanel.add(dice);
       buttonPanel.add(instructionsButton);
       buttonPanel.add(nextButton);
-      // REMOVE BELOW ME
-      JButton showAQuestion = new JButton("Show a Question");
-      showAQuestion.addActionListener(e -> controller.showQuestionAnswerPage());
-      buttonPanel.add(showAQuestion);
-      // REMOVE ABOVE ME
+
       // Add component panels to the mainPanel.
       mainPanel.add(buttonPanel, BorderLayout.NORTH);
       mainPanel.add(gameBoardPanel, BorderLayout.CENTER);
@@ -132,6 +130,15 @@ public class GameplayPage extends JFrame {
       ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
       squareGraphics.setIcon(icon);
 
+      squareGraphics.addActionListener(e -> {  // On "Click" of Square, Show Question/Answer Page with Random Category Question
+         Color squareColor = square.getColor();
+         String category = colorToCategoryMap.get(squareColor);
+         if (category != null) {
+            Question randomCategoryQuestion = GameData.getRandomQuestionByCategory(category);
+            controller.showQuestionAnswerPage(randomCategoryQuestion);
+         }
+      });
+
       // Switch to assign labels to some special squares
       String squareLabelText = "";
       switch (square.getType()) {
@@ -149,12 +156,11 @@ public class GameplayPage extends JFrame {
       }
       JLabel label = new JLabel(squareLabelText);
       label.setFont(new Font("Century Gothic", Font.PLAIN, 12)); // Use Century Gothic font, size 12
-// Wrap label in a JPanel to center it
+      // Wrap label in a JPanel to center it
       JPanel labelPanel = new JPanel(new GridBagLayout());
       labelPanel.setOpaque(false); // Make the JPanel transparent
       labelPanel.add(label);
       squareGraphics.add(labelPanel);
-
 
       // Ignoring dead squares which are not drawn. This space is used for player
       // score graphics.
@@ -163,29 +169,18 @@ public class GameplayPage extends JFrame {
          squareGraphics.setEnabled(false);
       }
       else {
-         switch (square.getColor()) {
-            case "R":
-               squareGraphics.setBackground(newRed);
-               break;
-            case "Y":
-               squareGraphics.setBackground(newYellow);
-               break;
-            case "B":
-               squareGraphics.setBackground(newBlue);
-               break;
-            case "G":
-               squareGraphics.setBackground(newGreen);
-               break;
-            case "W":
-               // Should only be the Trivial Compute Square in the middle
-               squareGraphics.setBackground(Color.white);
-               break;
-            case "P":
-               // Only the Roll Again Squares on the corners.
-               squareGraphics.setBackground(Color.white);
-               break;
-            default:
-               // squareGraphics.setBackground(Color.white);
+         if (square.getColor().equals(Color.RED)) {
+            squareGraphics.setBackground(newRed);
+         } else if (square.getColor().equals(Color.YELLOW)) {
+            squareGraphics.setBackground(newYellow);
+         } else if (square.getColor().equals(Color.BLUE)) {
+            squareGraphics.setBackground(newBlue);
+         } else if (square.getColor().equals(Color.GREEN)) {
+            squareGraphics.setBackground(newGreen);
+         } else if (square.getColor().equals(Color.WHITE)) {// Should only be the Trivial Compute Square in the middle
+            squareGraphics.setBackground(Color.WHITE);
+         } else if (square.getColor().equals(Color.PINK)) {// Only the Roll Again Squares on the corners.
+            squareGraphics.setBackground(Color.WHITE);
          }
 
       }

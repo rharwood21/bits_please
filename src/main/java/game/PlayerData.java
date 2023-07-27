@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.*;
 import java.util.Arrays;
 
 /**
@@ -13,9 +14,12 @@ public class PlayerData {
     // a 2D array to track player scores
     private boolean[][] playerScores;
     // array to store player colors
-    private static String[] playerColors;
+    private static Color[] playerColors;
 
-    public PlayerData(int numPlayers, String[] playerNames, String[] playerColors) {
+    // Singleton instance
+    private static PlayerData instance = null;
+
+    private PlayerData(int numPlayers, String[] playerNames, Color[] playerColors) {
         this.playerColors = playerColors;
 
         for (int i = 0; i < numPlayers; i++) {
@@ -26,6 +30,15 @@ public class PlayerData {
         playerPositions = new int[playerCount][2];
         playerScores = new boolean[playerCount][4];
     }
+
+    // Singleton getInstance method
+    public static PlayerData getInstance(int numPlayers, String[] playerNames, Color[] playerColors) {
+        if (instance == null) {
+            instance = new PlayerData(numPlayers, playerNames, playerColors);
+        }
+        return instance;
+    }
+
     /**
      * @param playerIndex
      * @param name
@@ -50,7 +63,7 @@ public class PlayerData {
      * @param playerIndex
      * @param color
      */
-    public static void setPlayerColor(int playerIndex, String color) {
+    public static void setPlayerColor(int playerIndex, Color color) {
         playerColors[playerIndex] = color;
     }
 
@@ -58,7 +71,7 @@ public class PlayerData {
      * @param playerIndex
      * @return color
      */
-    public static String getPlayerColor(int playerIndex) {
+    public static Color getPlayerColor(int playerIndex) {
         return playerColors[playerIndex];
     }
     public static int getUniqueColorCount(){
@@ -83,7 +96,7 @@ public class PlayerData {
 
     public static void flushPlayerColors(){
         //TODO: may want to make this to flush all player data instead.
-        playerColors = new String[4];
+        playerColors = new Color[4];
     }
     public static int[][] getPlayerPositions() {
         return playerPositions;
@@ -101,8 +114,7 @@ public class PlayerData {
         this.playerScores = playerScores;
     }
 
-    private static int uniqCount(String[] list) {
-        System.out.println(list[0] + list[1] + list[2] + list[3]);
+    private static int uniqCount(Object[] list) {
         return (int)Arrays.stream(Arrays.stream(list)
                 .filter(val -> val != null)
                 .toArray()).distinct().count();

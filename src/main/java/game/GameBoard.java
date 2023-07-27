@@ -16,7 +16,7 @@ public class GameBoard {
      */
     public GameBoard() {
         squares = new Square[numCols][numRows];
-        String color = "";
+        Color color = new Color(0,0,0);
         String type = "";
         int HQSwitcher = 0;     // This is used to make sure there is an HQ square for each color.
         int k = 0;      // Using this variable to test ways to generate the colors for normal question squares.
@@ -24,23 +24,23 @@ public class GameBoard {
             for (int j = 0; j < numRows; j++) {
                 switch (k % 4) {
                     case 0:
-                        color = "R";    // R - Red
+                        color = Color.RED;
                         break;
                     case 1:
-                        color = "Y";        // Y - Yellow
+                        color = Color.YELLOW;
                         break;
                     case 2:
-                        color = "B";        // B - Blue
+                        color = Color.BLUE;
                         break;
                     case 3:
-                        color = "G";        // G - Green
+                        color = Color.GREEN;
                         break;
                 }
 
                 // Making the corners of the board in to Roll Again Squares.
                 if ((i == 0 || i == 8) && (j == 0 || j == 8)) {
                     type = "Roll";      // Roll - short for Roll Again
-                    color = "P";        // P - Pink
+                    color = Color.PINK;
                     //TODO: make enums for types and colors
                 } else if ((i == 0 && j == 4) ||
                         (i == 4 && j == 0) ||
@@ -50,26 +50,26 @@ public class GameBoard {
                     // Ensuring that each HQ Square is a different color and the game is winnable!
                     switch (HQSwitcher) {
                         case 0:
-                            color = "R";
+                            color = Color.RED;
                             HQSwitcher++;
                             break;
                         case 1:
-                            color = "B";
+                            color = Color.BLUE;
                             HQSwitcher++;
                             break;
                         case 2:
-                            color = "Y";
+                            color = Color.YELLOW;
                             HQSwitcher++;
                             break;
                         case 3:
-                            color = "G";
+                            color = Color.GREEN;
                             HQSwitcher++;
                             break;
                     }
                 } else if (i == 4 && j == 4) {
                     // The center of the board is the Trivial Compute Square
                     type = "TC";
-                    color = "W";
+                    color = Color.WHITE;
                 } else if (
                         ((0 < i && i < 4) || (4 < i && i < 8))
                                 && ((0 < j && j < 4) || (4 < j && j < 8))

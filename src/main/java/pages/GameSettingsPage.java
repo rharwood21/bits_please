@@ -3,12 +3,14 @@ package pages;
 import game.GameController;
 import game.GameData;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents the player name input page of the Trivial Compute Game. Allows the
@@ -57,9 +59,14 @@ public class GameSettingsPage extends JFrame {
       cbPanel.setLayout(new GridLayout(6, 2));
       cbPanel.setBorder(new EmptyBorder(0, screenHeight / 3, screenWidth / 8, screenHeight / 3));
 
-      // hardcode category options for now
-      String[] subjectChoices = { "History", "Math", "Science", "English" };
-      String[] colorChoices = { "blue", "red", "green", "yellow" };
+      // TODO: De-duplicate, and dynamically retrieve categories from questionList/defaultQuestionList in GameData
+      String[] subjectChoices = { "History", "Entertainment", "Science", "Geography", "Computer Science" }; // Default Categories in DB
+      String[] colorChoices = { "Blue", "Red", "Green", "Yellow" };
+      Map<String, Color> stringColorMap = new HashMap<>();
+      stringColorMap.put(colorChoices[0], Color.BLUE);
+      stringColorMap.put(colorChoices[1], Color.RED);
+      stringColorMap.put(colorChoices[2], Color.GREEN);
+      stringColorMap.put(colorChoices[3], Color.YELLOW);
 
       // Set the first subject
       final JComboBox<String> subject1CB = new JComboBox<String>(subjectChoices);
@@ -111,10 +118,10 @@ public class GameSettingsPage extends JFrame {
 
          // save the categories and colors
          GameData.flushCategories();
-         GameData.setCategoryAndColor(0, (String) subject1CB.getSelectedItem(), (String) color1CB.getSelectedItem());
-         GameData.setCategoryAndColor(1, (String) subject2CB.getSelectedItem(), (String) color2CB.getSelectedItem());
-         GameData.setCategoryAndColor(2, (String) subject3CB.getSelectedItem(), (String) color3CB.getSelectedItem());
-         GameData.setCategoryAndColor(3, (String) subject4CB.getSelectedItem(), (String) color4CB.getSelectedItem());
+         GameData.setCategoryAndColor(0, (String) subject1CB.getSelectedItem(), stringColorMap.get(color1CB.getSelectedItem()));
+         GameData.setCategoryAndColor(1, (String) subject2CB.getSelectedItem(), stringColorMap.get(color2CB.getSelectedItem()));
+         GameData.setCategoryAndColor(2, (String) subject3CB.getSelectedItem(), stringColorMap.get(color3CB.getSelectedItem()));
+         GameData.setCategoryAndColor(3, (String) subject4CB.getSelectedItem(), stringColorMap.get(color4CB.getSelectedItem()));
 
          int uniqCategories = GameData.getUniqueCategoryCount();
          int uniqColors = GameData.getUniqueColorCount();

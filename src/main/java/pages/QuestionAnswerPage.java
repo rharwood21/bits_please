@@ -1,11 +1,14 @@
 package pages;
 
-import game.*;
+import game.GameController;
+import game.Question;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.util.Objects;
 
 /**
  * The question and answer page of the Trivial Compute game
@@ -15,6 +18,16 @@ import javax.imageio.ImageIO;
 public class QuestionAnswerPage extends JFrame {
    private GameController controller;
    private BufferedImage image;
+   private Question currentQuestion = null;
+   private JLabel questionCategoryLabel;
+   private JLabel questionText;
+   private ButtonGroup multipleChoiceButtonGroup;
+   private JRadioButton multipleChoice1 = new JRadioButton();
+   private JRadioButton multipleChoice2 = new JRadioButton();
+   private JRadioButton multipleChoice3 = new JRadioButton();
+   private JRadioButton multipleChoice4 = new JRadioButton();
+   private ImageIcon correctIcon = new ImageIcon(getClass().getResource("/images/correct.png"));
+   private ImageIcon incorrectIcon = new ImageIcon(getClass().getResource("/images/incorrect.png"));
 
    /**
     * Constructs a pages.QuestionAnswerPage object.
@@ -40,61 +53,62 @@ public class QuestionAnswerPage extends JFrame {
       this.setIconImage(pageIcon.getImage()); // change icon of frame
 
       // Set the layout manager
-      setLayout(new BorderLayout()); // comment for test push
+      setLayout(new BorderLayout());
 
       // Create components
       JPanel topPanel = new JPanel(new GridLayout(0, 1));
-      JLabel questionAnswerLabel = new JLabel("Question");
-      JLabel categoryLabel = new JLabel("Category: Science");
-      JLabel questionAnswer = new JLabel("What is the name of this course?");
+      JLabel genericQuestionLabel = new JLabel("Question");
+      questionCategoryLabel = new JLabel();
+      questionText = new JLabel();
 
-      questionAnswerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-      categoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
-      questionAnswer.setHorizontalAlignment(SwingConstants.CENTER);
+      genericQuestionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      questionCategoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      questionText.setHorizontalAlignment(SwingConstants.CENTER);
 
-      JButton backButton = new JButton("Back");
-      backButton.addActionListener(e -> controller.showGameplayPage());
+      topPanel.add(genericQuestionLabel);
+      topPanel.add(questionCategoryLabel);
 
-      topPanel.add(backButton);
-      topPanel.add(questionAnswerLabel);
-      topPanel.add(categoryLabel);
+      // Multiple Choice Button Group
+      multipleChoiceButtonGroup = new ButtonGroup();
+      multipleChoiceButtonGroup.add(multipleChoice1);
+      multipleChoiceButtonGroup.add(multipleChoice2);
+      multipleChoiceButtonGroup.add(multipleChoice3);
+      multipleChoiceButtonGroup.add(multipleChoice4);
+      multipleChoiceButtonGroup.clearSelection();
+
+      // Question & Multiple Choice Panel
+      JPanel questionAnswerPanel = new JPanel(new GridLayout(5, 1));
+      questionAnswerPanel.add(questionText);
+      questionAnswerPanel.add(multipleChoice1);
+      questionAnswerPanel.add(multipleChoice2);
+      questionAnswerPanel.add(multipleChoice3);
+      questionAnswerPanel.add(multipleChoice4);
 
       JPanel buttonPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-      buttonPanel1.setBorder(BorderFactory.createTitledBorder("Answer Verbally Before Checking Answer"));
+      buttonPanel1.setBorder(BorderFactory.createTitledBorder("Are you sure about your choice?"));
       JButton checkAnswerButton = new JButton("Check Answer");
+      checkAnswerButton.addActionListener(e -> {  // checkAnswerButton: Show Correct/Incorrect Answer, then Return to Gameplay
+         boolean correctAnswer;
+         try {
+            correctAnswer = isCorrectAnswerChoice();
+         } catch (RuntimeException ex){
+            JOptionPane.showMessageDialog(this, "Please Select an Answer", "Select an Answer", JOptionPane.ERROR_MESSAGE);
+            return;
+         }
+         if (correctAnswer){
+            // CORRECT
+            JOptionPane.showMessageDialog(this, "CORRECT!!! :D\nAnswer: "+currentQuestion.getQuestionAnswer(), "Correct!", JOptionPane.INFORMATION_MESSAGE, correctIcon);
+         } else {
+            // INCORRECT
+            JOptionPane.showMessageDialog(this, "INCORRECT!!! :(\nAnswer: "+currentQuestion.getQuestionAnswer(), "Incorrect!", JOptionPane.INFORMATION_MESSAGE, incorrectIcon);
+         }
+         controller.showGameplayPage();
+      });
       buttonPanel1.add(checkAnswerButton);
-      JButton correct = new JButton("Correct");
-      JButton incorrect = new JButton("Incorrect");
-
-      checkAnswerButton.addActionListener(e -> {
-         questionAnswerLabel.setText("Answer");
-         questionAnswer.setText("Foundations of Software Engineering");
-         remove(buttonPanel1);
-         JPanel buttonPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-         buttonPanel2.setBorder(BorderFactory.createTitledBorder("Opponents To Vote"));
-         buttonPanel2.add(correct);
-         buttonPanel2.add(incorrect);
-         topPanel.remove(categoryLabel);
-         add(buttonPanel2, BorderLayout.SOUTH);
-         revalidate();
-         repaint();
-      });
-
-      correct.addActionListener(e -> {
-         questionAnswer.setText("You got it right.");
-         revalidate();
-         repaint();
-      });
-
-      incorrect.addActionListener(e -> {
-         questionAnswer.setText("You answered incorrectly. Next player's turn.");
-         revalidate();
-         repaint();
-      });
 
       // Add components to the frame
       add(topPanel, BorderLayout.NORTH);
-      add(questionAnswer, BorderLayout.CENTER);
+      add(questionAnswerPanel, BorderLayout.CENTER);
       add(buttonPanel1, BorderLayout.SOUTH);
 
       // Set the size to 50% of the screen's height and width
@@ -103,6 +117,47 @@ public class QuestionAnswerPage extends JFrame {
       int screenHeight = (int) (screenSize.getHeight() * 0.5);
       setSize(screenWidth, screenHeight);
       setLocationRelativeTo(null); // Center the frame on the screen
-      // setVisible(true);
+   }
+   private boolean isCorrectAnswerChoice() throws RuntimeException {
+      if (!multipleChoice1.isSelected() && !multipleChoice2.isSelected() && !multipleChoice3.isSelected() && !multipleChoice4.isSelected()){
+         throw new RuntimeException("No Choice Selected");
+      }
+      String answer = currentQuestion.getQuestionAnswer();
+      if (multipleChoice1.isSelected() && Objects.equals(multipleChoice1.getText(), answer)){
+         return true;
+      }
+      else if (multipleChoice2.isSelected() && Objects.equals(multipleChoice2.getText(), answer)){
+         return true;
+      }
+      else if (multipleChoice3.isSelected() && Objects.equals(multipleChoice3.getText(), answer)){
+         return true;
+      }
+      else if (multipleChoice4.isSelected() && Objects.equals(multipleChoice4.getText(), answer)){
+         return true;
+      }
+      // Correct Answer Not Selected
+      return false;
+   }
+
+   public void setCurrentQuestion(Question currentQuestion) {
+      this.currentQuestion = currentQuestion;
+      refreshQuestion();
+   }
+
+   private void refreshQuestion(){
+      // Set the question category
+      if (currentQuestion != null) {
+         questionCategoryLabel.setText("Category: " + currentQuestion.getQuestionCategory());
+         // Set the question text
+         questionText.setText(currentQuestion.getQuestionText());
+         multipleChoice1.setText(currentQuestion.getMultipleChoiceOne());
+         multipleChoice2.setText(currentQuestion.getMultipleChoiceTwo());
+         multipleChoice3.setText(currentQuestion.getMultipleChoiceThree());
+         multipleChoice4.setText(currentQuestion.getMultipleChoiceFour());
+         multipleChoiceButtonGroup.clearSelection();
+      }
+      // If you want the GUI to refresh immediately, you can revalidate and repaint
+      revalidate();
+      repaint();
    }
 }

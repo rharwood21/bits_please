@@ -1,13 +1,18 @@
 package pages;
 
-import game.*;
+import game.GameController;
+import game.GameData;
+import game.PlayerData;
+import game.Question;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents the player name input page of the Trivial Compute Game.
@@ -19,7 +24,8 @@ public class PlayerNameInputPage extends JFrame {
    private JComboBox<String>[] colorCBList;
 
    private String[] playerNames = new String[4];
-   private String[] playerColors = new String[4];
+   private Color[] playerColors = new Color[4];
+   private static Map<String, Color> nameToColorMap = new HashMap<>();
    private BufferedImage image;
 
    /**
@@ -82,20 +88,19 @@ public class PlayerNameInputPage extends JFrame {
             // If the field is empty, don't make a player
             if (!playerNameTemp.trim().isEmpty()) {
                playerNames[i] = playerNameTemp;
-               playerColors[i] = (String) colorCBList[i].getSelectedItem();
+               playerColors[i] = nameToColorMap.get(colorCBList[i].getSelectedItem());
                numPlayers++;
             }
          }
 
-         // Making a new PlayerData instance with all our new player names entered by the
-         // user
-         PlayerData playerData = new PlayerData(numPlayers, playerNames, playerColors);
+         // Initializing the singleton PlayerData instance with all our new player names entered by the user
+         PlayerData playerData = PlayerData.getInstance(numPlayers, playerNames, playerColors);
 
          int currentPlayers = PlayerData.getPlayerCount();
          int uniqColors = PlayerData.getUniqueColorCount();
          System.out.println(uniqColors + " " + currentPlayers + " " + playerNames[0] + " " + playerNames[1] + " "
                + playerNames[2] + " " + playerNames[3]
-               + " " + playerColors[0] + " " + playerColors[1] + " " + playerColors[2] + " " + playerColors[3]);
+               + " " + playerColors[0] + " " + playerColors[1] + " " + playerColors[2] + " " + playerColors[3]); // TODO: Remove Me
 
          if (currentPlayers < 2 || currentPlayers > 4) {
             JOptionPane.showMessageDialog(null, "Invalid Number of Players!\nPlease input 2-4 names.", "Error",
@@ -130,12 +135,16 @@ public class PlayerNameInputPage extends JFrame {
       int playerNum = 1;
       Font labelFont = new Font("Roboto", Font.PLAIN, 24);
       // set colors
-      String[] colorChoices = { "blue", "red", "green", "yellow" };
+      String[] colorChoices = { "Blue", "Red", "Green", "Yellow" };
       JComboBox<String> colorCB = setColorOptions(colorChoices, 0);
       JComboBox<String> color2CB = setColorOptions(colorChoices, 1);
       JComboBox<String> color3CB = setColorOptions(colorChoices, 2);
       JComboBox<String> color4CB = setColorOptions(colorChoices, 3);
       colorCBList = new JComboBox[] { colorCB, color2CB, color3CB, color4CB };
+      nameToColorMap.put(colorChoices[0], Color.BLUE);
+      nameToColorMap.put(colorChoices[1], Color.RED);
+      nameToColorMap.put(colorChoices[2], Color.GREEN);
+      nameToColorMap.put(colorChoices[3], Color.YELLOW);
 
       for (JTextField nameField : nameFields) {
          JLabel playerLabel = new JLabel("Player " + playerNum);
