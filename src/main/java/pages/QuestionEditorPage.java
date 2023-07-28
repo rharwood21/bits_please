@@ -5,10 +5,7 @@ import game.GameController;
 import game.GameData;
 import game.Question;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import javax.imageio.ImageIO;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -17,10 +14,14 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Represents the question editor page of the Trivial Compute Game.
@@ -33,6 +34,7 @@ public class QuestionEditorPage extends JFrame {
    private DefaultTableModel tableModel;
    private JLabel lastUpdatedLabel;
    private JCheckBox checkbox;
+   private JComboBox<String> categoryFilterBox;
    private List<Question> tempQuestionList;
    private BufferedImage image;
    private final int COLUMN_QUESTION_TEXT = 0;
@@ -147,6 +149,17 @@ public class QuestionEditorPage extends JFrame {
       northPanel.add(lastUpdatedPanel, BorderLayout.NORTH);
       northPanel.add(questionButtonPanel, BorderLayout.SOUTH);
 
+      // Filter Box
+      categoryFilterBox = new JComboBox<>();
+      populateCategoryFilterBox();
+      categoryFilterBox.addActionListener(e -> displayQuestions(tempQuestionList));
+
+      JPanel filterPanel = new JPanel();
+      filterPanel.add(new JLabel("Filter by Category:"));
+      filterPanel.add(categoryFilterBox);
+      northPanel.add(filterPanel, BorderLayout.CENTER);
+
+
       add(northPanel, BorderLayout.NORTH);
       add(tablePanel, BorderLayout.CENTER);
       add(buttonPanel, BorderLayout.SOUTH);
@@ -240,6 +253,7 @@ public class QuestionEditorPage extends JFrame {
                JOptionPane.ERROR_MESSAGE);
       }
       GameData.setQuestionList(tempQuestionList);
+      populateCategoryFilterBox();
       displayQuestions(tempQuestionList);
       updateLastUpdatedLabel();
    }
@@ -296,18 +310,21 @@ public class QuestionEditorPage extends JFrame {
       if (questions == null) {
          return;
       }
+      String selectedCategory = (String) categoryFilterBox.getSelectedItem();
       for (Question question : questions) {
-         Object[] rowData = {
-               question.getQuestionText(),
-               question.getQuestionCategory(),
-               question.getQuestionAnswer(),
-               question.getMultipleChoiceOne(),
-               question.getMultipleChoiceTwo(),
-               question.getMultipleChoiceThree(),
-               question.getMultipleChoiceFour(),
-               question.getQuestionDifficulty()
-         };
-         tableModel.addRow(rowData);
+         if ("All".equals(selectedCategory) || question.getQuestionCategory().equals(selectedCategory)) {
+            Object[] rowData = {
+                    question.getQuestionText(),
+                    question.getQuestionCategory(),
+                    question.getQuestionAnswer(),
+                    question.getMultipleChoiceOne(),
+                    question.getMultipleChoiceTwo(),
+                    question.getMultipleChoiceThree(),
+                    question.getMultipleChoiceFour(),
+                    question.getQuestionDifficulty()
+            };
+            tableModel.addRow(rowData);
+         }
       }
 
       // Resize columns to fit content
@@ -443,4 +460,20 @@ public class QuestionEditorPage extends JFrame {
 
       return maxWidth;
    }
+   private void populateCategoryFilterBox() {
+      if (tempQuestionList == null){
+         return;
+      }
+      Set<String> categories = new HashSet<>();
+      for (Question question : tempQuestionList) {
+         categories.add(question.getQuestionCategory());
+      }
+
+      categoryFilterBox.removeAllItems();
+      categoryFilterBox.addItem("All");  // Allow seeing all questions
+      for (String category : categories) {
+         categoryFilterBox.addItem(category);
+      }
+   }
+
 }
