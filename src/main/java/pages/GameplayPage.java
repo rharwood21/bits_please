@@ -65,12 +65,16 @@ public class GameplayPage extends JFrame {
       // a graphical square will be drawn as a JButton.
       for (int i = 0; i < 9; i++) {
          for (int j = 0; j < 9; j++) {
-            // Ignore squares that are type="Dead". This space will be used to hold player
-            // score graphics.
-            // if (!board.getSquare(i,j).getType().equals("Dead")) {
-            drawSquare(board.getSquare(i, j), squareMargin);
-            gameBoardPanel.add(gameBoardSquares[i][j]);
-            // }
+            // Ignore squares that are type="Dead". This space will be used to hold player score graphics.
+            Square square = board.getSquare(i, j);
+            if (square.getType().equals("Dead")) {
+               JPanel deadSpace = new JPanel();
+               deadSpace.setOpaque(false); // make it transparent
+               gameBoardPanel.add(deadSpace);
+            } else {
+               drawSquare(square, squareMargin);
+               gameBoardPanel.add(gameBoardSquares[i][j]);
+            }
          }
       }
 
