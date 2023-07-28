@@ -7,8 +7,6 @@ import game.Question;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -80,18 +78,16 @@ public class QuestionEditorPage extends JFrame {
       lastUpdatedLabel.setFont(lastUpdatedLabel.getFont().deriveFont(Font.BOLD));
 
       checkbox = new JCheckBox("Use Default Question Bank Trivia Questions?");
-      checkbox.addChangeListener(new ChangeListener() {
-         public void stateChanged(ChangeEvent e) {
-            JCheckBox source = (JCheckBox) e.getSource();
-            if (source.isSelected()) {
-               GameData.setUseDefaultQuestions(true);
-               refreshQuestions();
-               changeComponentEditability(false);
-            } else {
-               GameData.setUseDefaultQuestions(false);
-               refreshQuestions();
-               changeComponentEditability(true);
-            }
+      checkbox.addActionListener(e -> {
+         JCheckBox source = (JCheckBox) e.getSource();
+         if (source.isSelected()) {
+            GameData.setUseDefaultQuestions(true);
+            refreshQuestions();
+            changeComponentEditability(false);
+         } else {
+            GameData.setUseDefaultQuestions(false);
+            refreshQuestions();
+            changeComponentEditability(true);
          }
       });
 
@@ -134,15 +130,12 @@ public class QuestionEditorPage extends JFrame {
 
       // GUI Control Button Panel
       JPanel buttonPanel = new JPanel();
-      // JButton nextButton = new JButton("Next");
-      // nextButton.addActionListener(e -> controller.showGameSettingsPage());
       JButton backButton = new JButton("Back");
       backButton.addActionListener(e -> controller.showWelcomePage());
       JButton instructionsButton = new JButton("Instructions");
       instructionsButton.addActionListener(e -> controller.showInstructionsPage("EDITOR"));
       buttonPanel.add(instructionsButton);
       buttonPanel.add(backButton);
-      // buttonPanel.add(nextButton);
 
       // Add components to the frame
       JPanel northPanel = new JPanel(new BorderLayout());
@@ -181,7 +174,7 @@ public class QuestionEditorPage extends JFrame {
       } catch (APIRequestException e) {
          tempQuestionList = null;
       }
-      displayQuestions(tempQuestionList);
+      refreshQuestions();
       updateLastUpdatedLabel();
       changeComponentEditability(true);
    }
@@ -474,6 +467,7 @@ public class QuestionEditorPage extends JFrame {
       for (String category : categories) {
          categoryFilterBox.addItem(category);
       }
+      categoryFilterBox.setSelectedIndex(0); // All
    }
 
 }
