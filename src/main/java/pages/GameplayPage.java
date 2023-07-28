@@ -24,6 +24,8 @@ public class GameplayPage extends JFrame {
    private JPanel gameBoardPanel;
    private BufferedImage image;
    private Map<Color, String> colorToCategoryMap = GameData.getColorToCategoryMap();
+   private int acoreboardsCreated = 0;
+   private static final Insets squareMargin = new Insets(0, 0, 0, 0);
 
    /**
     * Constructs a pages.GameplayPage object.
@@ -56,10 +58,9 @@ public class GameplayPage extends JFrame {
       // Create the gameBoardPanel which will hold all of the buttons / game squares.
       // The GridLayout is passed as
       // input to hold all of the game squares as a 9 x 9 grid.
-      JPanel gameBoardPanel = new JPanel(new GridLayout(0, 9));
+      gameBoardPanel = new JPanel(new GridBagLayout());
       gameBoardPanel.setBorder(new LineBorder(Color.BLACK));
       gameBoardPanel.setBounds(0, 0, 600, 600);
-      Insets squareMargin = new Insets(0, 0, 0, 0);
 
       // For each square in the "board" instance of the GameBoard class,
       // a graphical square will be drawn as a JButton.
@@ -67,13 +68,14 @@ public class GameplayPage extends JFrame {
          for (int j = 0; j < 9; j++) {
             // Ignore squares that are type="Dead". This space will be used to hold player score graphics.
             Square square = board.getSquare(i, j);
-            if (square.getType().equals("Dead")) {
-               JPanel deadSpace = new JPanel();
-               deadSpace.setOpaque(false); // make it transparent
-               gameBoardPanel.add(deadSpace);
+            if ((i == 1 && j == 1) || (i == 1 && j == 5) || (i == 5 && j == 1) || (i == 5 && j == 5)) { 
+               JPanel scoreboardPanel = createScoreboard();
+               addBoardComponent(gameBoardPanel, scoreboardPanel, i, j, 3, 3, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+            } else if (board.getSquare(i, j).getType().equals("Dead")) {
+               // Do Nothing
             } else {
                drawSquare(square, squareMargin);
-               gameBoardPanel.add(gameBoardSquares[i][j]);
+               addBoardComponent(gameBoardPanel, gameBoardSquares[i][j], i, j, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             }
          }
       }
@@ -211,5 +213,22 @@ public class GameplayPage extends JFrame {
       // add(playerPanel, BorderLayout.SOUTH);
       playerPanel.revalidate();
       playerPanel.repaint();
+   }
+
+   private JPanel createScoreboard() {
+      JPanel scoreboard = new JPanel();
+      // Customize your scoreboard here...
+      scoreboard.setBackground(Color.WHITE); // Or whatever color you prefer
+      return scoreboard;
+   }
+
+   private static void addBoardComponent(
+           Container container, Component component, int gridx, int gridy,
+           int gridwidth, int gridheight, int anchor, int fill
+   ) {
+      GridBagConstraints gbc = new GridBagConstraints(
+              gridx, gridy, gridwidth, gridheight,1.0,1.0, anchor, fill, squareMargin,0,0
+      );
+      container.add(component, gbc);
    }
 }
