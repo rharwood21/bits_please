@@ -4,10 +4,12 @@ import game.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,7 +26,8 @@ public class GameplayPage extends JFrame {
    private JPanel gameBoardPanel;
    private BufferedImage image;
    private Map<Color, String> colorToCategoryMap = GameData.getColorToCategoryMap();
-   private int acoreboardsCreated = 0;
+   private int scoreboardsCreated = 0;
+   private Map<Integer, JButton[][]> playerIndexToButtonArrayMap = new HashMap<>();
    private static final Insets squareMargin = new Insets(0, 0, 0, 0);
 
    /**
@@ -68,12 +71,20 @@ public class GameplayPage extends JFrame {
          for (int j = 0; j < 9; j++) {
             // Ignore squares that are type="Dead". This space will be used to hold player score graphics.
             Square square = board.getSquare(i, j);
-            if ((i == 1 && j == 1) || (i == 1 && j == 5) || (i == 5 && j == 1) || (i == 5 && j == 5)) { 
-               JPanel scoreboardPanel = createScoreboard();
+            if ((i == 1 && j == 1) || (i == 1 && j == 5) || (i == 5 && j == 1) || (i == 5 && j == 5)) {
+               // Scoreboard Cell in Gameboard
+               JPanel scoreboardPanel;
+               if (scoreboardsCreated < PlayerData.getPlayerCount()) { // Still Players to Add
+                  scoreboardPanel = createScoreboard(PlayerData.getPlayerName(scoreboardsCreated));
+               } else { // No more Players to Add
+                  scoreboardPanel = new JPanel();
+                  scoreboardPanel.setBackground(Color.WHITE);
+               }
                addBoardComponent(gameBoardPanel, scoreboardPanel, i, j, 3, 3, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             } else if (board.getSquare(i, j).getType().equals("Dead")) {
-               // Do Nothing
+               // Intentionally Do Nothing
             } else {
+               // Normal Game Square
                drawSquare(square, squareMargin);
                addBoardComponent(gameBoardPanel, gameBoardSquares[i][j], i, j, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             }
@@ -215,10 +226,39 @@ public class GameplayPage extends JFrame {
       playerPanel.repaint();
    }
 
-   private JPanel createScoreboard() {
-      JPanel scoreboard = new JPanel();
-      // Customize your scoreboard here...
-      scoreboard.setBackground(Color.WHITE); // Or whatever color you prefer
+   private JPanel createScoreboard(String playerName) {
+      // Create the scoreboard main panel
+      JPanel scoreboard = new JPanel(new BorderLayout());
+      scoreboard.setBorder(new LineBorder(Color.BLACK)); // Add a border if you want
+
+      // Create a label for the player's name
+      JLabel playerNameLabel = new JLabel(playerName); // This is just a placeholder. Replace with the actual name when required.
+      playerNameLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+      playerNameLabel.setHorizontalAlignment(SwingConstants.CENTER); // Center align the text
+
+      // Add the player's name label to the top
+      scoreboard.add(playerNameLabel, BorderLayout.NORTH);
+
+      // Create the 4x4 grid
+      JPanel grid = new JPanel(new GridLayout(2, 2));
+      grid.setBorder(new EmptyBorder(10, 10, 10, 10)); // 10 pixels margin around the container
+      JButton[][] scoreButtons = new JButton[2][2];
+
+      for (int i = 0; i < 2; i++) {
+         for (int j = 0; j < 2; j++) {
+            JButton button = new JButton();
+            button.setMargin(squareMargin);
+            button.setBackground(Color.WHITE); // Initial color
+            grid.add(button);
+            scoreButtons[i][j] = button; // Store it for future references
+         }
+      }
+      playerIndexToButtonArrayMap.put(scoreboardsCreated, scoreButtons);
+      scoreboardsCreated++;
+
+      // Add the 4x4 grid to the center of the scoreboard
+      scoreboard.add(grid, BorderLayout.CENTER);
+
       return scoreboard;
    }
 

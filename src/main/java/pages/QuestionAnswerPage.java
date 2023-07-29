@@ -102,7 +102,7 @@ public class QuestionAnswerPage extends JFrame {
             // INCORRECT
             JOptionPane.showMessageDialog(this, "INCORRECT!!! :(\nAnswer: "+currentQuestion.getQuestionAnswer(), "Incorrect!", JOptionPane.INFORMATION_MESSAGE, incorrectIcon);
          }
-         controller.showGameplayPage();
+         controller.showGameplayPage(false);
       });
       buttonPanel1.add(checkAnswerButton);
 

@@ -27,7 +27,7 @@ public class GameController {
         gameSettingsPage = new GameSettingsPage(this);
         playerNameInputPage = new PlayerNameInputPage(this);
         questionEditorPage = new QuestionEditorPage(this);
-        gameplayPage = new GameplayPage(this);
+        // gameplayPage = new GameplayPage(this); // Cannot initialize here, given dependency on Player names
         winnerPage = new WinnerPage(this);
         instructionsPage = new InstructionsPage(this);
         questionAnswerPage = new QuestionAnswerPage(this);
@@ -66,7 +66,7 @@ public class GameController {
     /**
      * Shows the gameplay page.
      */
-    public void showGameplayPage() {
+    public void showGameplayPage(boolean playersInitialized) {
         disposePages();
         try {
             GameData.initializeQuestionMap(); // Initialize Questions for Gameplay
@@ -76,7 +76,11 @@ public class GameController {
 
             return; // This return will close the application
         }
-        gameplayPage.updatePlayerNames(); // Update player names in the pages.GameplayPage
+
+        if (playersInitialized){
+            gameplayPage = new GameplayPage(this);
+            gameplayPage.updatePlayerNames(); // Update player names in the pages.GameplayPage
+        }
         gameplayPage.setVisible(true);
     }
     /**
@@ -109,7 +113,9 @@ public class GameController {
         playerNameInputPage.dispose();
         gameSettingsPage.dispose();
         questionEditorPage.dispose();
-        gameplayPage.dispose();
+        if (gameplayPage != null){
+            gameplayPage.dispose();
+        }
         winnerPage.dispose();
         instructionsPage.dispose();
         questionAnswerPage.dispose();

@@ -1,11 +1,10 @@
 package pages;
 
-import game.*;
+import game.GameController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -156,7 +155,7 @@ public class InstructionsPage extends JFrame {
          switch (returnPage) {
             case "WELCOME" -> controller.showWelcomePage();
             case "EDITOR" -> controller.showQuestionEditorPage();
-            case "GAMEPLAY" -> controller.showGameplayPage();
+            case "GAMEPLAY" -> controller.showGameplayPage(false);
          }
       });
 
