@@ -1,11 +1,13 @@
 package pages;
 
-import game.*;
+import game.GameController;
+import game.PlayerData;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 
 /**
  * Represents the winner page of the Trivial Compute Game.
@@ -21,7 +23,7 @@ public class WinnerPage extends JFrame {
     *
     * @param controller The game controller instance for managing the navigation.
     */
-   public WinnerPage(GameController controller) {
+   public WinnerPage(GameController controller, int winnerIndex) {
       super("Winner Page");
 
       this.controller = controller;
@@ -38,7 +40,7 @@ public class WinnerPage extends JFrame {
       ImageIcon pageIcon = new ImageIcon(image);
       this.setIconImage(pageIcon.getImage()); // change icon of frame
 
-      JLabel winnerLabel = new JLabel("Congratulations, Player X! You are the winner!");
+      JLabel winnerLabel = new JLabel("Congratulations, "+ PlayerData.getPlayerName(winnerIndex) +"! You are the winner!");
       winnerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
       JButton restartButton = new JButton("Restart");

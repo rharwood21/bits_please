@@ -12,7 +12,7 @@ public class PlayerData {
     // a 2D array to track player positions
     private static int[][] playerPositions;
     // a 2D array to track player scores
-    private boolean[][] playerScores;
+    private static boolean[][] playerScores;
     // array to store player colors
     private static Color[] playerColors;
 
@@ -118,5 +118,26 @@ public class PlayerData {
         return (int)Arrays.stream(Arrays.stream(list)
                 .filter(val -> val != null)
                 .toArray()).distinct().count();
+    }
+
+    public static void incrementPlayerScore(int playerIndex, int categoryIndex){
+        if ((playerIndex < 0 || playerIndex > playerCount - 1) || (categoryIndex < 0 || categoryIndex > 3)){
+            throw new RuntimeException("Invalid Increment Player Score Option.");
+        }
+        playerScores[playerIndex][categoryIndex] = true;
+    }
+    public static int checkWinConditionAndReturnPlayerIndex(){
+        for (int i = 0; i < playerCount - 1; i++){ // Iterate Over Players
+            boolean isWinner = true;
+            for (int j = 0; j < 4; j++){  // Iterate Over Categories
+                if (!playerScores[i][j]){
+                    isWinner = false;
+                }
+            }
+            if (isWinner){
+                return i;
+            }
+        }
+        return -1;
     }
 }

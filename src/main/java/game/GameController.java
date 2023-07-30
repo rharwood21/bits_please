@@ -16,7 +16,6 @@ public class GameController {
     private GameplayPage gameplayPage;
     private WinnerPage winnerPage;
     private InstructionsPage instructionsPage;
-    private QuestionAnswerPage questionAnswerPage;
     /**
      * Constructs a game.GameController object.
      * Initializes the GUI screens for the game.
@@ -27,10 +26,7 @@ public class GameController {
         gameSettingsPage = new GameSettingsPage(this);
         playerNameInputPage = new PlayerNameInputPage(this);
         questionEditorPage = new QuestionEditorPage(this);
-        // gameplayPage = new GameplayPage(this); // Cannot initialize here, given dependency on Player names
-        winnerPage = new WinnerPage(this);
         instructionsPage = new InstructionsPage(this);
-        questionAnswerPage = new QuestionAnswerPage(this);
 
         // Start the application by displaying the welcome page
         showWelcomePage();
@@ -86,20 +82,14 @@ public class GameController {
     /**
      * Shows the winner page.
      */
-    public void showWinnerPage() {
+    public void showWinnerPage(int winnerIndex) {
         disposePages();
+        winnerPage = new WinnerPage(this, winnerIndex);
         winnerPage.setVisible(true);
     }
-
     /**
-     * Shows the question and answer page
+     * Shows the Instructions page.
      */
-    public void showQuestionAnswerPage(Question currentQuestion) {
-        disposePages();
-        questionAnswerPage.setCurrentQuestion(currentQuestion);
-        questionAnswerPage.setVisible(true);
-    }
-    
     public void showInstructionsPage(String returnPage){
         disposePages();
         instructionsPage.returnPage = returnPage;
@@ -116,8 +106,6 @@ public class GameController {
         if (gameplayPage != null){
             gameplayPage.dispose();
         }
-        winnerPage.dispose();
         instructionsPage.dispose();
-        questionAnswerPage.dispose();
     }
 }

@@ -1,7 +1,7 @@
 package game;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
 public class JDie extends JButton {
@@ -11,6 +11,8 @@ public class JDie extends JButton {
 
     public JDie() {
         setLayout(new FlowLayout(FlowLayout.CENTER));
+        // TODO: Implement ActionListener in GameplayPage for Game-loop built around dice-roll, instead of here.
+        //  Requires board pieces to be implemented.
         addActionListener(e -> {
             value = rollDice();
             repaint();
@@ -65,5 +67,10 @@ public class JDie extends JButton {
                 g.fillRect(5 * SIDE, 3 * SIDE, SIDE, SIDE);
                 break;
         }
+    }
+
+    public void repaintDice(){
+        revalidate();
+        repaint();
     }
 }

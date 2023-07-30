@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents the gameplay page of the Trivial Compute Game.
@@ -27,9 +28,14 @@ public class GameplayPage extends JFrame {
    private BufferedImage image;
    private Map<Color, String> colorToCategoryMap = GameData.getColorToCategoryMap();
    private int scoreboardsCreated = 0;
-   private Map<Integer, JButton[][]> playerIndexToButtonArrayMap = new HashMap<>();
+   private Map<Integer, JButton[]> playerIndexToButtonArrayMap = new HashMap<>();
+   private Map<Color, Integer> colorToScoreboardIndexMap = new HashMap<>();
    private static final Insets squareMargin = new Insets(0, 0, 0, 0);
-
+   private JLabel currentPlayerLabel;
+   private String currentPlayerName;
+   private int currentPlayerIndex = 0;
+   private ImageIcon correctIcon = new ImageIcon(getClass().getResource("/images/correct.png"));
+   private ImageIcon incorrectIcon = new ImageIcon(getClass().getResource("/images/incorrect.png"));
    /**
     * Constructs a pages.GameplayPage object.
     *
@@ -40,6 +46,7 @@ public class GameplayPage extends JFrame {
    Color newBlue = new Color(26, 82, 118);  // Deep blue
    Color newGreen = new Color(26, 82, 60);  // Deep green
    Color newYellow = new Color(238, 208, 63); // Gold-toned yellow
+
    public GameplayPage(GameController controller) {
       super("Trivial Compute");
 
@@ -57,19 +64,15 @@ public class GameplayPage extends JFrame {
       ImageIcon pageIcon = new ImageIcon(image);
       this.setIconImage(pageIcon.getImage()); // change icon of frame
 
-      JPanel mainPanel = new JPanel(new BorderLayout());
       // Create the gameBoardPanel which will hold all of the buttons / game squares.
-      // The GridLayout is passed as
-      // input to hold all of the game squares as a 9 x 9 grid.
+      JPanel mainPanel = new JPanel(new BorderLayout());
       gameBoardPanel = new JPanel(new GridBagLayout());
       gameBoardPanel.setBorder(new LineBorder(Color.BLACK));
       gameBoardPanel.setBounds(0, 0, 600, 600);
 
-      // For each square in the "board" instance of the GameBoard class,
-      // a graphical square will be drawn as a JButton.
+      // For each square in the "board" instance of the GameBoard class, a graphical square will be drawn as a JButton.
       for (int i = 0; i < 9; i++) {
          for (int j = 0; j < 9; j++) {
-            // Ignore squares that are type="Dead". This space will be used to hold player score graphics.
             Square square = board.getSquare(i, j);
             if ((i == 1 && j == 1) || (i == 1 && j == 5) || (i == 5 && j == 1) || (i == 5 && j == 5)) {
                // Scoreboard Cell in Gameboard
@@ -93,23 +96,42 @@ public class GameplayPage extends JFrame {
 
       // Create a panel for the player names
       playerPanel = new JPanel();
-      // // Set the number of columns dynamically
       playerPanel.setLayout(new GridLayout(1, 4));
 
       // Next Button/Panel
+      currentPlayerLabel = new JLabel(PlayerData.getPlayerName(currentPlayerIndex));
+      currentPlayerLabel.setBorder(new LineBorder(Color.BLACK));
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-      buttonPanel.add(dice);
-      JButton nextButton = new JButton("Next");
+      JButton nextButton = new JButton("Remove Me: Next");
       nextButton.addActionListener(e -> {
          // Pass control to the controller or navigate to the next page
          // Example: navigating to the winner page
-         controller.showWinnerPage();
+         controller.showWinnerPage(0);
       });
       JButton instructionsButton = new JButton("Instructions");
       instructionsButton.addActionListener(e -> controller.showInstructionsPage("GAMEPLAY"));
+      // TODO: Dice ActionListener will ACTUALLY run gameplay, once we have Player board pieces
+//      dice.addActionListener(e -> {
+//         // Primary Game Loop
+//         dice.setBackground(Color.WHITE);
+//         int roll_value = dice.rollDice(); // TODO: Use this for moving player on gameboard
+//         dice.repaintDice();
+//         try {
+//            Thread.sleep(3000); // Sleep 3 Seconds
+//         } catch (InterruptedException ex) {/* Ignore */}
+//
+//         // Main Q&A Game-Loop
+//         Square square; // TODO: Get Square from player piece
+//         runQuestionAnswerLoop(square);
+//
+//         // Check if Any Player is Winner & Increment Turn
+//         incrementPlayerTurn();
+//      });
+      // UNCOMMENT ABOVE ME
+      buttonPanel.add(currentPlayerLabel);
       buttonPanel.add(dice);
       buttonPanel.add(instructionsButton);
-      buttonPanel.add(nextButton);
+      buttonPanel.add(nextButton); // TODO: Remove Me
 
       // Add component panels to the mainPanel.
       mainPanel.add(buttonPanel, BorderLayout.NORTH);
@@ -128,13 +150,19 @@ public class GameplayPage extends JFrame {
       setSize(size, size);
 
       setLocationRelativeTo(null); // Center the frame on the screen
+
+      // Initialize Hashmap
+      colorToScoreboardIndexMap.put(Color.RED, 0);
+      colorToScoreboardIndexMap.put(Color.YELLOW, 1);
+      colorToScoreboardIndexMap.put(Color.GREEN, 2);
+      colorToScoreboardIndexMap.put(Color.BLUE, 3);
    }
 
    /**
     * The drawSquare method transforms Square objects into JButtons to be added to
     * the gameBoardSquares
     * JButton[][] private variable within the GamePlayPage class.
-    * 
+    *
     * @param square       - this instance of the Square class contains all the
     *                     necessary information to illustrate a square
     *                     that represents a tile of the trivial compute gameboard.
@@ -147,17 +175,14 @@ public class GameplayPage extends JFrame {
       ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
       squareGraphics.setIcon(icon);
 
+      // TODO: With pieces, SquareGraphics Should NOT have game logic. REMOVE ME
       squareGraphics.addActionListener(e -> {  // On "Click" of Square, Show Question/Answer Page with Random Category Question
-         Color squareColor = square.getColor();
-         String category = colorToCategoryMap.get(squareColor);
-         if (category != null) {
-            Question randomCategoryQuestion = GameData.getRandomQuestionByCategory(category);
-            controller.showQuestionAnswerPage(randomCategoryQuestion);
-         }
+         runQuestionAnswerLoop(square);
+         incrementPlayerTurn();
       });
 
       // Switch to assign labels to some special squares
-      String squareLabelText = "";
+      String squareLabelText;
       switch (square.getType()) {
          case "Roll":
             squareLabelText = "Roll Again";
@@ -172,20 +197,19 @@ public class GameplayPage extends JFrame {
             squareLabelText = "";
       }
       JLabel label = new JLabel(squareLabelText);
-      label.setFont(new Font("Century Gothic", Font.PLAIN, 12)); // Use Century Gothic font, size 12
+      label.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+
       // Wrap label in a JPanel to center it
       JPanel labelPanel = new JPanel(new GridBagLayout());
       labelPanel.setOpaque(false); // Make the JPanel transparent
       labelPanel.add(label);
       squareGraphics.add(labelPanel);
 
-      // Ignoring dead squares which are not drawn. This space is used for player
-      // score graphics.
+      // Ignoring dead squares which are not drawn. This space is used for player score graphics.
       if (square.getType().equals("Dead")) {
          squareGraphics.setBackground(Color.WHITE);
          squareGraphics.setEnabled(false);
-      }
-      else {
+      } else {
          if (square.getColor().equals(Color.RED)) {
             squareGraphics.setBackground(newRed);
          } else if (square.getColor().equals(Color.YELLOW)) {
@@ -220,8 +244,6 @@ public class GameplayPage extends JFrame {
             playerPanel.add(playerLabel);
          }
       }
-      // Add the playerPanel back to the frame
-      // add(playerPanel, BorderLayout.SOUTH);
       playerPanel.revalidate();
       playerPanel.repaint();
    }
@@ -242,21 +264,19 @@ public class GameplayPage extends JFrame {
       // Create the 4x4 grid
       JPanel grid = new JPanel(new GridLayout(2, 2));
       grid.setBorder(new EmptyBorder(10, 10, 10, 10)); // 10 pixels margin around the container
-      JButton[][] scoreButtons = new JButton[2][2];
+      JButton[] scoreButtons = new JButton[4];
 
-      for (int i = 0; i < 2; i++) {
-         for (int j = 0; j < 2; j++) {
-            JButton button = new JButton();
-            button.setMargin(squareMargin);
-            button.setBackground(Color.WHITE); // Initial color
-            grid.add(button);
-            scoreButtons[i][j] = button; // Store it for future references
-         }
+      for (int i = 0; i < 4; i++) {
+         JButton button = new JButton();
+         button.setMargin(squareMargin);
+         button.setBackground(Color.WHITE); // Initial color
+         grid.add(button);
+         scoreButtons[i] = button; // Store it for future references
       }
       playerIndexToButtonArrayMap.put(scoreboardsCreated, scoreButtons);
       scoreboardsCreated++;
 
-      // Add the 4x4 grid to the center of the scoreboard
+      // Add the 2x2 grid to the center of the scoreboard
       scoreboard.add(grid, BorderLayout.CENTER);
 
       return scoreboard;
@@ -267,8 +287,81 @@ public class GameplayPage extends JFrame {
            int gridwidth, int gridheight, int anchor, int fill
    ) {
       GridBagConstraints gbc = new GridBagConstraints(
-              gridx, gridy, gridwidth, gridheight,1.0,1.0, anchor, fill, squareMargin,0,0
+              gridx, gridy, gridwidth, gridheight, 1.0, 1.0, anchor, fill, squareMargin, 0, 0
       );
       container.add(component, gbc);
+   }
+
+   private int showQuestionAnswerPage(QuestionAnswerPage questionAnswerPanel) {
+      ImageIcon pageIcon = new ImageIcon(image);
+      int result = JOptionPane.showConfirmDialog(
+              null,
+              questionAnswerPanel,
+              "Question And Answer Page",
+              JOptionPane.DEFAULT_OPTION,
+              JOptionPane.QUESTION_MESSAGE,
+              pageIcon
+      );
+      return result;
+   }
+
+   private void incrementScoreboard(int playerIndex, Color squareColor) {
+      JButton[] playersScoreButtons = playerIndexToButtonArrayMap.get(playerIndex);
+      int buttonIndex = colorToScoreboardIndexMap.get(squareColor);
+      playersScoreButtons[buttonIndex].setBackground(squareColor);
+   }
+
+   private void incrementPlayerTurn() {
+      // Check if Any Player is Winner
+      int possibleWinner = PlayerData.checkWinConditionAndReturnPlayerIndex();
+      if (possibleWinner != -1) {
+         // Win Condition
+         try {
+            Thread.sleep(3000);
+         } catch (InterruptedException exception) {/* Do Nothing*/}
+         controller.showWinnerPage(possibleWinner);
+         return;
+      }
+      // Update Next Player's Values
+      if (currentPlayerIndex == PlayerData.getPlayerCount() - 1) {
+         currentPlayerIndex = -1; // Reset Current Player
+      }
+      currentPlayerIndex++;
+      currentPlayerName = PlayerData.getPlayerName(currentPlayerIndex);
+      currentPlayerLabel.setText(currentPlayerName);
+      dice.setBackground(Color.YELLOW);
+      revalidate();
+      repaint();
+   }
+
+   private void runQuestionAnswerLoop(Square square) {
+      Color squareColor = square.getColor();
+      String category = colorToCategoryMap.get(squareColor);
+      boolean isHQ = Objects.equals(square.getType(), "HQ");
+      if (category != null) {
+         // TODO: Don't Show Duplicate Questions
+         Question randomCategoryQuestion = GameData.getRandomQuestionByCategory(category);
+         QuestionAnswerPage questionAnswerPanel = new QuestionAnswerPage(randomCategoryQuestion);
+         boolean isCorrectAnswer;
+         while (true) { // Loop to Ensure Player Selects Answer
+            showQuestionAnswerPage(questionAnswerPanel);
+            try {
+               isCorrectAnswer = questionAnswerPanel.isCorrectAnswerChoice();
+               break;
+            } catch (RuntimeException exception) {
+               JOptionPane.showMessageDialog(null, "Answer must be selected!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+         }
+         if (isCorrectAnswer) { // Increment Score
+            if (isHQ) {
+               PlayerData.incrementPlayerScore(currentPlayerIndex, colorToScoreboardIndexMap.get(squareColor));
+               incrementScoreboard(currentPlayerIndex, squareColor);
+            }
+            JOptionPane.showMessageDialog(this, "CORRECT!!! :D\nAnswer: " + randomCategoryQuestion.getQuestionAnswer(), "Correct!", JOptionPane.INFORMATION_MESSAGE, correctIcon);
+         } else {
+            // INCORRECT
+            JOptionPane.showMessageDialog(this, "INCORRECT!!! :(\nAnswer: " + randomCategoryQuestion.getQuestionAnswer(), "Incorrect!", JOptionPane.INFORMATION_MESSAGE, incorrectIcon);
+         }
+      }
    }
 }
