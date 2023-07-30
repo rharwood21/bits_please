@@ -21,14 +21,15 @@ public class PlayerData {
 
     private PlayerData(int numPlayers, String[] playerNames, Color[] playerColors) {
         this.playerColors = playerColors;
+        playerPositions = new int[numPlayers][2];
+        playerCount = numPlayers;
+        playerScores = new boolean[playerCount][4];
 
         for (int i = 0; i < numPlayers; i++) {
             setPlayerName(i, playerNames[i]);
             setPlayerColor(i, playerColors[i]);
+            setPlayerPositions(i, i * 2, 0);
         }
-
-        playerPositions = new int[playerCount][2];
-        playerScores = new boolean[playerCount][4];
     }
 
     // Singleton getInstance method
@@ -98,13 +99,18 @@ public class PlayerData {
         //TODO: may want to make this to flush all player data instead.
         playerColors = new Color[4];
     }
-    public static int[][] getPlayerPositions() {
-        return playerPositions;
+    public static int[][] getPlayerPositions(int playerIndex) {
+        int[][] playerPosition = new int[1][2];
+        playerPosition[1][1] = playerPositions[playerIndex][1];
+        playerPosition[1][2] = playerPositions[playerIndex][2];
+        return playerPosition;
     }
 
-    public static void setPlayerPositions(int[][] playerPositions) {
-        PlayerData.playerPositions = playerPositions;
+    public static void setPlayerPositions(int playerIndex, int playerX, int playerY) {
+        playerPositions[playerIndex][1] = playerX;
+        playerPositions[playerIndex][2] = playerY;
     }
+
 
     public boolean[][] getPlayerScores() {
         return playerScores;
