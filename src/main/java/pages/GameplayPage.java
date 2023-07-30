@@ -123,9 +123,6 @@ public class GameplayPage extends JFrame {
 //         // Main Q&A Game-Loop
 //         Square square; // TODO: Get Square from player piece
 //         runQuestionAnswerLoop(square);
-//
-//         // Check if Any Player is Winner & Increment Turn
-//         incrementPlayerTurn();
 //      });
       // UNCOMMENT ABOVE ME
       buttonPanel.add(currentPlayerLabel);
@@ -178,7 +175,6 @@ public class GameplayPage extends JFrame {
       // TODO: With pieces, SquareGraphics Should NOT have game logic. REMOVE ME
       squareGraphics.addActionListener(e -> {  // On "Click" of Square, Show Question/Answer Page with Random Category Question
          runQuestionAnswerLoop(square);
-         incrementPlayerTurn();
       });
 
       // Switch to assign labels to some special squares
@@ -336,7 +332,9 @@ public class GameplayPage extends JFrame {
 
    private void runQuestionAnswerLoop(Square square) {
       Color squareColor = square.getColor();
-      String category = colorToCategoryMap.get(squareColor);
+      String category = (squareColor == Color.WHITE) ?
+              launchChooseACategory() :
+              colorToCategoryMap.get(squareColor);
       boolean isHQ = Objects.equals(square.getType(), "HQ");
       if (category != null) {
          // TODO: Don't Show Duplicate Questions
@@ -361,7 +359,52 @@ public class GameplayPage extends JFrame {
          } else {
             // INCORRECT
             JOptionPane.showMessageDialog(this, "INCORRECT!!! :(\nAnswer: " + randomCategoryQuestion.getQuestionAnswer(), "Incorrect!", JOptionPane.INFORMATION_MESSAGE, incorrectIcon);
+            incrementPlayerTurn();
          }
       }
+   }
+
+   private String launchChooseACategory() {
+      String redCategory = colorToCategoryMap.get(Color.RED);
+      String blueCategory = colorToCategoryMap.get(Color.BLUE);
+      String greenCategory = colorToCategoryMap.get(Color.GREEN);
+      String yellowCategory = colorToCategoryMap.get(Color.YELLOW);
+      JPanel choicePanel = new JPanel(new GridLayout(2,4));
+      choicePanel.add(new JLabel(redCategory));
+      choicePanel.add(new JLabel(blueCategory));
+      choicePanel.add(new JLabel(greenCategory));
+      choicePanel.add(new JLabel(yellowCategory));
+      JButton redButton = new JButton();redButton.setBackground(Color.RED);
+      JButton blueButton = new JButton();blueButton.setBackground(Color.BLUE);
+      JButton greenButton = new JButton();greenButton.setBackground(Color.GREEN);
+      JButton yellowButton = new JButton();yellowButton.setBackground(Color.YELLOW);
+      choicePanel.add(redButton);choicePanel.add(blueButton);choicePanel.add(greenButton);choicePanel.add(yellowButton);
+      String[] options = {redCategory, blueCategory, greenCategory, yellowCategory};
+      int result = -1;
+      while (result == -1){
+         result = JOptionPane.showOptionDialog(
+                 this,
+                 choicePanel,
+                 "Select a Category",
+                 JOptionPane.DEFAULT_OPTION,
+                 JOptionPane.QUESTION_MESSAGE,
+                 null,
+                 options,
+                 options[0]
+         );
+      }
+      switch (result) {
+         case 0:
+            return redCategory;
+         case 1:
+            return blueCategory;
+         case 2:
+            return greenCategory;
+         case 3:
+            return yellowCategory;
+         default:
+            throw new RuntimeException();
+      }
+
    }
 }

@@ -26,6 +26,7 @@ public class GameData {
     }
 
     public static Map<Color, String> getColorToCategoryMap() {
+        colorToCategoryMap.put(Color.WHITE, "ALL");
         return colorToCategoryMap;
     }
 
@@ -122,6 +123,10 @@ public class GameData {
 
         Random random = new Random();
         return questions.get(random.nextInt(questions.size()));
+    }
+    public static Question getRandomQuestionAllCategories(){
+        Random random = new Random();
+        return defaultQuestionList.get(random.nextInt(defaultQuestionList.size()));
     }
 
 }
