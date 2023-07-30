@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Represents the gameplay page of the Trivial Compute Game.
@@ -36,6 +37,7 @@ public class GameplayPage extends JFrame {
    private int currentPlayerIndex = 0;
    private ImageIcon correctIcon = new ImageIcon(getClass().getResource("/images/correct.png"));
    private ImageIcon incorrectIcon = new ImageIcon(getClass().getResource("/images/incorrect.png"));
+   public enum Direction { UP, DOWN, LEFT, RIGHT }
    /**
     * Constructs a pages.GameplayPage object.
     *
@@ -321,6 +323,8 @@ public class GameplayPage extends JFrame {
    }
 
    private void runQuestionAnswerLoop(Square square) {
+      Direction directionChoice = chooseMovementDirection();
+      // TODO: Use Direction Choice with Player Pieces to Determine Square Landed-on
       Color squareColor = square.getColor();
       String category = (squareColor == Color.WHITE) ?
               launchChooseACategory() :
@@ -405,5 +409,60 @@ public class GameplayPage extends JFrame {
             throw new RuntimeException();
       }
 
+   }
+
+   private Direction chooseMovementDirection(){
+      JPanel directionChooserPanel = new JPanel(new GridBagLayout());
+      JButton upButton, downButton, leftButton, rightButton;
+      ButtonGroup arrowButtons = new ButtonGroup();
+      AtomicReference<Direction> directionChoice = new AtomicReference<>();
+
+      // Create the Arrow Buttons with Action Listeners
+      upButton = new JButton("↑");
+      upButton.addActionListener(e -> directionChoice.set(Direction.UP));
+
+      downButton = new JButton("↓");
+      downButton.addActionListener(e -> directionChoice.set(Direction.DOWN));
+
+      leftButton = new JButton("←");
+      leftButton.addActionListener(e -> directionChoice.set(Direction.LEFT));
+
+      rightButton = new JButton("→");
+      rightButton.addActionListener(e -> directionChoice.set(Direction.RIGHT));
+
+      upButton.setFont(upButton.getFont().deriveFont(Font.BOLD, 24f));
+      downButton.setFont(downButton.getFont().deriveFont(Font.BOLD, 24f));
+      leftButton.setFont(leftButton.getFont().deriveFont(Font.BOLD, 24f));
+      rightButton.setFont(rightButton.getFont().deriveFont(Font.BOLD, 24f));
+
+      arrowButtons.add(upButton);arrowButtons.add(downButton);arrowButtons.add(leftButton);arrowButtons.add(rightButton);
+      arrowButtons.clearSelection();
+
+      // Add Buttons to JPanel
+      GridBagConstraints gbc = new GridBagConstraints(
+              2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, squareMargin, 0, 0
+      );
+      directionChooserPanel.add(upButton, gbc);
+      gbc = new GridBagConstraints(
+              2, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, squareMargin, 0, 0
+      );
+      directionChooserPanel.add(downButton, gbc);
+      gbc = new GridBagConstraints(
+              1, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, squareMargin, 0, 0
+      );
+      directionChooserPanel.add(leftButton, gbc);
+      gbc = new GridBagConstraints(
+              3, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, squareMargin, 0, 0
+      );
+      directionChooserPanel.add(rightButton, gbc);
+
+      while (true){
+         JOptionPane.showConfirmDialog(this, directionChooserPanel, "Select Direction", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE);
+         // TODO: Validate Based on Player Position if Direction Choice is Valid
+         if (directionChoice.get() != null){
+            System.out.println(directionChoice.get());
+            return directionChoice.get();
+         }
+      }
    }
 }
