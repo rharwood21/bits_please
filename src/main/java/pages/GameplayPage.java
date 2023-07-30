@@ -182,6 +182,10 @@ public class GameplayPage extends JFrame {
       ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
       squareGraphics.setIcon(icon);
 
+      Dimension squareSize = new Dimension(64, 64);  // example size
+      squareGraphics.setMinimumSize(squareSize);
+      squareGraphics.setMaximumSize(squareSize);
+
       // TODO: With pieces, SquareGraphics Should NOT have game logic. REMOVE ME
       squareGraphics.addActionListener(e -> {  // On "Click" of Square, Show Question/Answer Page with Random Category Question
          runQuestionAnswerLoop(square);
