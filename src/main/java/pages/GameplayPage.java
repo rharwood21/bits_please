@@ -308,16 +308,6 @@ public class GameplayPage extends JFrame {
    }
 
    private void incrementPlayerTurn() {
-      // Check if Any Player is Winner
-      int possibleWinner = PlayerData.checkWinConditionAndReturnPlayerIndex();
-      if (possibleWinner != -1) {
-         // Win Condition
-         try {
-            Thread.sleep(3000);
-         } catch (InterruptedException exception) {/* Do Nothing*/}
-         controller.showWinnerPage(possibleWinner);
-         return;
-      }
       // Update Next Player's Values
       if (currentPlayerIndex == PlayerData.getPlayerCount() - 1) {
          currentPlayerIndex = -1; // Reset Current Player
@@ -361,6 +351,15 @@ public class GameplayPage extends JFrame {
             JOptionPane.showMessageDialog(this, "INCORRECT!!! :(\nAnswer: " + randomCategoryQuestion.getQuestionAnswer(), "Incorrect!", JOptionPane.INFORMATION_MESSAGE, incorrectIcon);
             incrementPlayerTurn();
          }
+      }
+      // Check if Any Player is Winner
+      int possibleWinner = PlayerData.checkWinConditionAndReturnPlayerIndex();
+      if (possibleWinner != -1) {
+         // Win Condition
+         try {
+            Thread.sleep(3000);
+         } catch (InterruptedException exception) {/* Do Nothing*/}
+         controller.showWinnerPage(possibleWinner);
       }
    }
 
