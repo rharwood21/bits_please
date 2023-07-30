@@ -25,7 +25,7 @@ public class GameplayPage extends JFrame {
    private GameBoard board = new GameBoard();
    private JDie dice = new JDie();
    private JButton[][] gameBoardSquares = new JButton[9][9];
-   private PlayerPiece[] playerPieces;
+   private PlayerPiece[] playerPieces = new PlayerPiece[PlayerData.getPlayerCount()];
    private JPanel gameBoardPanel;
    private BufferedImage image;
    private Map<Color, String> colorToCategoryMap = GameData.getColorToCategoryMap();
@@ -99,7 +99,7 @@ public class GameplayPage extends JFrame {
       for (int i = 0; i < PlayerData.getPlayerCount(); i++) {
          playerPieces[i] = new PlayerPiece(PlayerData.getPlayerColor(i));
          int[][] playerPosition = PlayerData.getPlayerPositions(i);
-         addBoardComponent(gameBoardPanel, playerPieces[i], playerPosition[1][1], playerPosition[1][2], 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+         addBoardComponent(gameBoardPanel, playerPieces[i], playerPosition[0][0], playerPosition[0][1], 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
       }
 
       // Create a panel for the player names
