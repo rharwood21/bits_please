@@ -70,7 +70,9 @@ public class GameSettingsPage extends JFrame {
 
       // Set the first subject
       final JComboBox<String> subject1CB = new JComboBox<String>(subjectChoices);
+      subject1CB.setRenderer(new CustomComboBoxRenderer());
       final JComboBox<String> color1CB = new JComboBox<String>(colorChoices);
+      color1CB.setRenderer(new CustomComboBoxRenderer());
 
       subject1CB.setVisible(true);
       cbPanel.add(subject1CB);
@@ -79,7 +81,9 @@ public class GameSettingsPage extends JFrame {
 
       // Set the second subject
       final JComboBox<String> subject2CB = new JComboBox<String>(subjectChoices);
+      subject2CB.setRenderer(new CustomComboBoxRenderer());
       final JComboBox<String> color2CB = new JComboBox<String>(colorChoices);
+      color2CB.setRenderer(new CustomComboBoxRenderer());
 
       subject2CB.setSelectedIndex(1);
       subject2CB.setVisible(true);
@@ -90,7 +94,9 @@ public class GameSettingsPage extends JFrame {
 
       // Set the third subject
       final JComboBox<String> subject3CB = new JComboBox<String>(subjectChoices);
+      subject3CB.setRenderer(new CustomComboBoxRenderer());
       final JComboBox<String> color3CB = new JComboBox<String>(colorChoices);
+      color3CB.setRenderer(new CustomComboBoxRenderer());
 
       subject3CB.setSelectedIndex(2);
       subject3CB.setVisible(true);
@@ -101,7 +107,9 @@ public class GameSettingsPage extends JFrame {
 
       // Set the fourth subject
       final JComboBox<String> subject4CB = new JComboBox<String>(subjectChoices);
+      subject4CB.setRenderer(new CustomComboBoxRenderer());
       final JComboBox<String> color4CB = new JComboBox<String>(colorChoices);
+      color4CB.setRenderer(new CustomComboBoxRenderer());
 
       subject4CB.setSelectedIndex(3);
       subject4CB.setVisible(true);

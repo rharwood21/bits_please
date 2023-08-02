@@ -177,6 +177,7 @@ public class PlayerNameInputPage extends JFrame {
 
    private JComboBox<String> setColorOptions(String[] colorChoices, int i) {
       JComboBox<String> colorCB = new JComboBox<>(colorChoices);
+      colorCB.setRenderer(new CustomComboBoxRenderer());
       colorCB.setSelectedIndex(i);
       colorCB.setVisible(true);
       return colorCB;
