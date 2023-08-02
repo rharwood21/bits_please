@@ -1,6 +1,9 @@
 package game;
 
+import bits_please_api.APIRequestException;
 import pages.*;
+
+import javax.swing.*;
 
 /**
  * The game controller for managing the navigation and flow of the Trivial Compute Game.
@@ -23,8 +26,6 @@ public class GameController {
         gameSettingsPage = new GameSettingsPage(this);
         playerNameInputPage = new PlayerNameInputPage(this);
         questionEditorPage = new QuestionEditorPage(this);
-        gameplayPage = new GameplayPage(this);
-        winnerPage = new WinnerPage(this);
         instructionsPage = new InstructionsPage(this);
 
         // Start the application by displaying the welcome page
@@ -61,19 +62,34 @@ public class GameController {
     /**
      * Shows the gameplay page.
      */
-    public void showGameplayPage() {
+    public void showGameplayPage(boolean playersInitialized) {
         disposePages();
-        gameplayPage.updatePlayerNames(); // Update player names in the pages.GameplayPage
+        try {
+            GameData.initializeQuestionMap(); // Initialize Questions for Gameplay
+        } catch (APIRequestException e){
+            JOptionPane.showMessageDialog(null, "Questions Not Initialized!\n" +
+                    "Please Ensure Database is up.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            return; // This return will close the application
+        }
+
+        if (playersInitialized){
+            gameplayPage = new GameplayPage(this);
+            gameplayPage.updatePlayerNames(); // Update player names in the pages.GameplayPage
+        }
         gameplayPage.setVisible(true);
     }
     /**
      * Shows the winner page.
      */
-    public void showWinnerPage() {
+    public void showWinnerPage(int winnerIndex) {
         disposePages();
+        winnerPage = new WinnerPage(this, winnerIndex);
         winnerPage.setVisible(true);
     }
-
+    /**
+     * Shows the Instructions page.
+     */
     public void showInstructionsPage(String returnPage){
         disposePages();
         instructionsPage.returnPage = returnPage;
@@ -87,8 +103,9 @@ public class GameController {
         playerNameInputPage.dispose();
         gameSettingsPage.dispose();
         questionEditorPage.dispose();
-        gameplayPage.dispose();
-        winnerPage.dispose();
+        if (gameplayPage != null){
+            gameplayPage.dispose();
+        }
         instructionsPage.dispose();
     }
 }

@@ -1,91 +1,83 @@
 package pages;
 
-import game.*;
+import game.Question;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
-/**
- * The question and answer page of the Trivial Compute game
- * Displays questions from category, answer is checked, opponents vote on answer's correctness
- */
-public class QuestionAnswerPage extends JFrame {
-    private GameController controller;
-    /**
-     * Constructs a pages.QuestionAnswerPage object.
-     *
-     * @param controller The game controller instance for managing the navigation.
-     */
-    public QuestionAnswerPage(GameController controller) {
-        super("Question And Answer Page");
+public class QuestionAnswerPage extends JPanel {
+   private Question currentQuestion;
+   private JRadioButton multipleChoice1;
+   private JRadioButton multipleChoice2;
+   private JRadioButton multipleChoice3;
+   private JRadioButton multipleChoice4;
+   public QuestionAnswerPage(Question question) {
+      currentQuestion = question;
 
-        this.controller = controller;
+      // Title set in JOptionPane call
+      // Icon set in JOptionPane call
+      // Set the layout manager
+      setLayout(new BorderLayout());
 
-        this.setTitle("Question And Answer Page");  //sets title of frame
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        this.setResizable(false);  //prevent frame from being resized
-        ImageIcon image = new ImageIcon("/images/BitsPleaseLogo.jpg");
-        this.setIconImage(image.getImage());  //change icon of frame
+      // Create components
+      JPanel topPanel = new JPanel(new GridLayout(0, 1));
+      JLabel genericQuestionLabel = new JLabel("Question");
+      JLabel questionCategoryLabel = new JLabel(currentQuestion.getQuestionCategory());
 
-        // Set the layout manager
-        setLayout(new BorderLayout());
+      genericQuestionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      questionCategoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // Create components
-        JPanel topPanel = new JPanel(new GridLayout(0, 1));
-        JLabel questionAnswerLabel = new JLabel("Question");
-        JLabel categoryLabel = new JLabel("Category: Science");
-        JLabel questionAnswer = new JLabel("What is the name of this course?");
+      topPanel.add(genericQuestionLabel);
+      topPanel.add(questionCategoryLabel);
 
-        questionAnswerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        categoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        questionAnswer.setHorizontalAlignment(SwingConstants.CENTER);
+      // Multiple Choice Button Group
+      multipleChoice1 = new JRadioButton(currentQuestion.getMultipleChoiceOne());
+      multipleChoice2 = new JRadioButton(currentQuestion.getMultipleChoiceTwo());
+      multipleChoice3 = new JRadioButton(currentQuestion.getMultipleChoiceThree());
+      multipleChoice4 = new JRadioButton(currentQuestion.getMultipleChoiceFour());
 
-        topPanel.add(questionAnswerLabel);
-        topPanel.add(categoryLabel);
+      ButtonGroup multipleChoiceButtonGroup = new ButtonGroup();
+      multipleChoiceButtonGroup.add(multipleChoice1);
+      multipleChoiceButtonGroup.add(multipleChoice2);
+      multipleChoiceButtonGroup.add(multipleChoice3);
+      multipleChoiceButtonGroup.add(multipleChoice4);
+      multipleChoiceButtonGroup.clearSelection();
 
-        JPanel buttonPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel1.setBorder(BorderFactory.createTitledBorder("Answer Verbally Before Checking Answer"));
-        JButton checkAnswerButton = new JButton("Check Answer");
-        buttonPanel1.add(checkAnswerButton);
-        JButton correct = new JButton("Correct");
-        JButton incorrect = new JButton("Incorrect");
+      // Question & Multiple Choice Panel
+      JPanel questionAnswerPanel = new JPanel(new GridLayout(5, 1));
+      JLabel questionText = new JLabel(currentQuestion.getQuestionText());
+      questionText.setHorizontalAlignment(SwingConstants.CENTER);
+      questionAnswerPanel.add(questionText);
+      questionAnswerPanel.add(multipleChoice1);
+      questionAnswerPanel.add(multipleChoice2);
+      questionAnswerPanel.add(multipleChoice3);
+      questionAnswerPanel.add(multipleChoice4);
 
-        checkAnswerButton.addActionListener(e -> {
-       	   questionAnswerLabel.setText("Answer");
-       	   questionAnswer.setText("Foundations of Software Engineering");
-       	   remove(buttonPanel1);
-           JPanel buttonPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-           buttonPanel2.setBorder(BorderFactory.createTitledBorder("Opponents To Vote"));
-           buttonPanel2.add(correct);
-           buttonPanel2.add(incorrect);
-           topPanel.remove(categoryLabel);
-           add(buttonPanel2, BorderLayout.SOUTH);
-           revalidate();
-           repaint();
-        });
+      // TODO: Set Message Dialog for Correct/Incorrect in Gameplay GUI
 
-        correct.addActionListener(e -> {
-           questionAnswer.setText("You got it right.");
-           revalidate();
-           repaint();
-        });
-
-        incorrect.addActionListener(e -> {
-           questionAnswer.setText("You answered incorrectly. Next player's turn.");
-           revalidate();
-           repaint();
-        });
-
-        // Add components to the frame
-        add(topPanel, BorderLayout.NORTH);
-        add(questionAnswer, BorderLayout.CENTER);
-        add(buttonPanel1, BorderLayout.SOUTH);
-
-        // Set the size to 50% of the screen's height and width
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int screenWidth = (int) (screenSize.getWidth() * 0.5);
-        int screenHeight = (int) (screenSize.getHeight() * 0.5);
-        setSize(screenWidth, screenHeight);
-        setLocationRelativeTo(null); // Center the frame on the screen
-        setVisible(true);
-    }
+      // Add components to the panel
+      add(topPanel, BorderLayout.NORTH);
+      add(questionAnswerPanel, BorderLayout.CENTER);
+   }
+   public boolean isCorrectAnswerChoice() throws RuntimeException {
+      if (!multipleChoice1.isSelected() && !multipleChoice2.isSelected() && !multipleChoice3.isSelected() && !multipleChoice4.isSelected()){
+         throw new RuntimeException("No Choice Selected");
+      }
+      String answer = currentQuestion.getQuestionAnswer();
+      if (multipleChoice1.isSelected() && Objects.equals(multipleChoice1.getText(), answer)){
+         return true;
+      }
+      else if (multipleChoice2.isSelected() && Objects.equals(multipleChoice2.getText(), answer)){
+         return true;
+      }
+      else if (multipleChoice3.isSelected() && Objects.equals(multipleChoice3.getText(), answer)){
+         return true;
+      }
+      else if (multipleChoice4.isSelected() && Objects.equals(multipleChoice4.getText(), answer)){
+         return true;
+      }
+      // Correct Answer Not Selected
+      return false;
+   }
 }

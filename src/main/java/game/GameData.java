@@ -1,30 +1,40 @@
 package game;
 
+import bits_please_api.APIRequestException;
 import bits_please_api.QuestionDifficulty;
 
-import java.util.Arrays;
+import java.awt.*;
 import java.util.List;
+import java.util.*;
 
 public class GameData {
     private static String[] gameCategories = new String[4];
-    private static String[] categoryColors = new String[4];
-
+    private static Color[] categoryColors = new Color[4];
+    private static Map<Color, String> colorToCategoryMap = new HashMap<>();
+    private static Map<String, List<Question>> categoryToQuestionListMap = null;
     private static List<Question> questionList = null;
+    private static List<Question> defaultQuestionList = Question.retrieveAllDefaultQuestions();
 
     private static boolean useDefaultQuestions = true;
     private static QuestionDifficulty minimumDifficulty = QuestionDifficulty.EASY;
     private static QuestionDifficulty maximumDifficulty = QuestionDifficulty.VERY_HARD;
 
-    public static void setCategoryAndColor(int index, String category, String color) {
-    	gameCategories[index] = category;
-    	categoryColors[index] = color;
+    public static void setCategoryAndColor(int index, String category, Color color) {
+        gameCategories[index] = category;
+        categoryColors[index] = color;
+        colorToCategoryMap.put(color, category);
+    }
+
+    public static Map<Color, String> getColorToCategoryMap() {
+        colorToCategoryMap.put(Color.WHITE, "ALL");
+        return colorToCategoryMap;
     }
 
     public static String getCategory(int index) {
         return gameCategories[index];
     }
 
-    public static String getColor(int index) {
+    public static Color getColor(int index) {
         return categoryColors[index];
     }
 
@@ -34,6 +44,10 @@ public class GameData {
 
     public static int getUniqueColorCount(){
         return uniqCount(categoryColors);
+    }
+
+    public static List<Question> getDefaultQuestionList() {
+        return defaultQuestionList;
     }
 
     public static boolean useDefaultQuestions() {
@@ -58,14 +72,61 @@ public class GameData {
     }
 
     public static void flushCategories(){
-    	gameCategories = new String[4];
-    	categoryColors = new String[4];
+        gameCategories = new String[4];
+        categoryColors = new Color[4];
     }
-    
-    private static int uniqCount(String[] list) {
-    	if (list.length == 0) {
-    		return 0;
-    	}
-    	return (int)Arrays.stream(list).distinct().count(); 
+
+    private static int uniqCount(Object[] list) {
+        if (list.length == 0) {
+            return 0;
+        }
+        return (int)Arrays.stream(list).distinct().count();
     }
+
+    /**
+     * Initializes the categoryToQuestionListMap with questions grouped by category.
+     *
+     * Should be called upon entering Gameplay.
+     */
+    public static void initializeQuestionMap() throws APIRequestException {
+        if (categoryToQuestionListMap != null){  // categoryToQuestionListMap Already Initialized
+            return;
+        }
+        categoryToQuestionListMap = new HashMap<>();
+        List<Question> questions = useDefaultQuestions ? defaultQuestionList : questionList;
+        if (questions == null){
+            throw new APIRequestException("Questions List is null");
+        }
+
+        for (Question q : questions) {
+            String category = q.getQuestionCategory();
+
+            if (!categoryToQuestionListMap.containsKey(category)) {
+                categoryToQuestionListMap.put(category, new ArrayList<>());
+            }
+            categoryToQuestionListMap.get(category).add(q);
+        }
+    }
+
+    /**
+     * Returns a random question for the specified category.
+     */
+    public static Question getRandomQuestionByCategory(String category) {
+        if (category == null){
+            return null;
+        }
+        List<Question> questions = categoryToQuestionListMap.get(category.toLowerCase()); // Questions from DB all lowercase categories
+
+        if (questions == null || questions.isEmpty()) {
+            return null; // or throw an exception, based on how you want to handle it
+        }
+
+        Random random = new Random();
+        return questions.get(random.nextInt(questions.size()));
+    }
+    public static Question getRandomQuestionAllCategories(){
+        Random random = new Random();
+        return defaultQuestionList.get(random.nextInt(defaultQuestionList.size()));
+    }
+
 }
