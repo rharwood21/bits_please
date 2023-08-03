@@ -19,12 +19,22 @@ public class GameData {
     private static QuestionDifficulty minimumDifficulty = QuestionDifficulty.EASY;
     private static QuestionDifficulty maximumDifficulty = QuestionDifficulty.VERY_HARD;
 
+    /**
+    * Sets category and color for a given index
+    * @param index - int
+    * @param category
+    * @param color - color for that category
+    */
     public static void setCategoryAndColor(int index, String category, Color color) {
         gameCategories[index] = category;
         categoryColors[index] = color;
         colorToCategoryMap.put(color, category);
     }
 
+    /**
+    * Inserts a map entry and returns the map
+    * @return the color and category map
+    */
     public static Map<Color, String> getColorToCategoryMap() {
         colorToCategoryMap.put(Color.WHITE, "ALL");
         return colorToCategoryMap;
@@ -46,6 +56,9 @@ public class GameData {
         return uniqCount(categoryColors);
     }
 
+    /**
+    * Note - default q's already retrieved on initialization of this class
+    */
     public static List<Question> getDefaultQuestionList() {
         return defaultQuestionList;
     }
@@ -57,6 +70,7 @@ public class GameData {
     public static void setUseDefaultQuestions(boolean useDefaultQuestions) {
         GameData.useDefaultQuestions = useDefaultQuestions;
     }
+    
     public static void setDifficultyRange(int minimum, int maximum){
         if (minimum < 1 || minimum > 5 || maximum < 1 || maximum > 5){
             throw new RuntimeException("Difficulty must be within 1-5");
@@ -71,11 +85,18 @@ public class GameData {
         GameData.questionList = questionList;
     }
 
+    /**
+    * Flushes categories, detaches associated colors
+    */
     public static void flushCategories(){
         gameCategories = new String[4];
         categoryColors = new Color[4];
     }
 
+    /**
+    * @param - list - array of objects
+    * @return - int number of distinct objects in object array
+    */
     private static int uniqCount(Object[] list) {
         if (list.length == 0) {
             return 0;
@@ -109,7 +130,8 @@ public class GameData {
     }
 
     /**
-     * Returns a random question for the specified category.
+     * @return - Question - a random question for the specified category.
+     * TODO: Should we remove q from bank after asked on first pass thru q's during gameplay
      */
     public static Question getRandomQuestionByCategory(String category) {
         if (category == null){
@@ -124,6 +146,12 @@ public class GameData {
         Random random = new Random();
         return questions.get(random.nextInt(questions.size()));
     }
+
+    /**
+    * @return - Question - a random question from all categories
+    * TODO: incorporate more than just the default list
+    * if this method is even needed
+    */
     public static Question getRandomQuestionAllCategories(){
         Random random = new Random();
         return defaultQuestionList.get(random.nextInt(defaultQuestionList.size()));
