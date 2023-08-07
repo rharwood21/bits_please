@@ -26,6 +26,7 @@ public class GameplayPage extends JFrame {
    private JDie dice = new JDie();
    private JButton[][] gameBoardSquares = new JButton[9][9];
    private PlayerPiece[] playerPieces = new PlayerPiece[PlayerData.getPlayerCount()];
+   private JPanel[][] gameBoardSquaresPanels = new JPanel[9][9];
    private JPanel gameBoardPanel;
    private BufferedImage image;
    private Map<Color, String> colorToCategoryMap = GameData.getColorToCategoryMap();
@@ -93,13 +94,17 @@ public class GameplayPage extends JFrame {
                // Normal Game Square
                drawSquare(square, squareMargin);
                addBoardComponent(gameBoardPanel, gameBoardSquares[i][j], i, j, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+               // Also adding a panel on top of the button, in the future it probably makes sense to just replace squares with these panels.
+               gameBoardSquaresPanels[i][j] = new JPanel();
+               gameBoardSquaresPanels[i][j].setOpaque(false);
+               addBoardComponent(gameBoardPanel, gameBoardSquaresPanels[i][j], i, j, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             }
          }
       }
       for (int i = 0; i < PlayerData.getPlayerCount(); i++) {
          playerPieces[i] = new PlayerPiece(PlayerData.getPlayerColor(i));
          int[][] playerPosition = PlayerData.getPlayerPositions(i);
-         addBoardComponent(gameBoardPanel, playerPieces[i], playerPosition[0][0], playerPosition[0][1], 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+         addBoardComponent(gameBoardSquaresPanels[playerPosition[0][0]][playerPosition[0][1]], playerPieces[i], playerPosition[0][0], playerPosition[0][1], 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
       }
 
       // Create a panel for the player names
