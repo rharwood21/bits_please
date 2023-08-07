@@ -7,11 +7,14 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -152,15 +155,18 @@ public class GameplayPage extends JFrame {
          dice.repaintDice();
 
          // Main Move-Player-Piece Loop
-         int[] newSquareIndices = runMovePlayerLoop(roll_value);
+         runMovePlayerLoop(roll_value, new OnMovePlayerCompleteListener() {
+            @Override
+            public void onMovePlayerComplete(int i, int j) {
+               // Get New Square
+               Square newSquare = board.getSquare(i, j);
 
-         // Get New Square
-         Square newSquare = board.getSquare(newSquareIndices[0], newSquareIndices[1]);
+               // Main Q&A Game-Loop
+               runQuestionAnswerLoop(newSquare);
 
-         // Main Q&A Game-Loop
-         runQuestionAnswerLoop(newSquare);
-
-         dice.setBackground(Color.YELLOW);
+               dice.setBackground(Color.YELLOW);
+            }
+         });
       });
       // UNCOMMENT ABOVE ME
       buttonPanel.add(currentPlayerLabel);
@@ -398,42 +404,56 @@ public class GameplayPage extends JFrame {
       repaint();
    }
 
-   private int[] runMovePlayerLoop(int spacesToMove){
-      int[] currentPosition = PlayerData.getPlayerPosition(currentPlayerIndex);
-      int i = currentPosition[0];
-      int j = currentPosition[1];
-      boolean showDirectionChooser = true;
-      Direction moveDirection = null;
-      
-      while (true){
-         // Get Player Direction Choice
-         if (showDirectionChooser){
-            moveDirection = chooseMovementDirection();
-            showDirectionChooser = false;
-         }
-         // Validate Move and Increment in Direction
-         if (isValidMove(i, j, moveDirection)){
-            i = i + moveDirection.getDx();
-            j = j + moveDirection.getDy();
-            setPlayerPiecePosition(currentPlayerIndex, i, j);
-            spacesToMove -= 1; // Decrement Spaces to Move
-            // TODO: Sleep here to add delay
-         } else {
-            showDirectionChooser = true;
-         }
-         // Show Direction Chooser on Cross-Sections
-         if (i == 0 && (j == 0 || j == 4 || j == 8)){
-            showDirectionChooser = true;
-         } else if (i == 4 && (j == 0 || j == 4 || j == 8)){
-            showDirectionChooser = true;
-         } else if (i == 8 && (j == 0 || j == 4 || j == 8)){
-            showDirectionChooser = true;
-         }
-         // Break After No More Spaces
-         if (spacesToMove == 0){ break; }
-      }
-      return new int[]{i, j};
+   interface OnMovePlayerCompleteListener {
+      void onMovePlayerComplete(int i, int j);
    }
+   private void runMovePlayerLoop(int spacesToMove, OnMovePlayerCompleteListener listener) {
+      int[] currentPosition = PlayerData.getPlayerPosition(currentPlayerIndex);
+      AtomicInteger i = new AtomicInteger(currentPosition[0]);
+      AtomicInteger j = new AtomicInteger(currentPosition[1]);
+      final Direction[] moveDirection = {null};
+      AtomicInteger remainingSpacesToMove = new AtomicInteger(spacesToMove);
+
+      Timer timer = new Timer(500, null); // 500 ms delay
+      timer.addActionListener(new ActionListener() {
+         boolean showDirectionChooser = true;
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            // Check if all moves have been performed
+            if (remainingSpacesToMove.get() == 0) {
+               timer.stop();
+               if(listener != null) {
+                  listener.onMovePlayerComplete(i.get(), j.get());
+               }
+               return;
+            }
+            // Get Player Direction Choice
+            if (showDirectionChooser){
+               moveDirection[0] = chooseMovementDirection();
+               showDirectionChooser = false;
+            }
+            // Validate Move and Increment in Direction
+            if (isValidMove(i.get(), j.get(), moveDirection[0])){
+               i.addAndGet(moveDirection[0].getDx());
+               j.addAndGet(moveDirection[0].getDy());
+               setPlayerPiecePosition(currentPlayerIndex, i.get(), j.get());
+               remainingSpacesToMove.decrementAndGet(); // Decrement Spaces to Move
+            } else {
+               showDirectionChooser = true;
+            }
+            // Show Direction Chooser on Cross-Sections
+            if (i.get() == 0 && (j.get() == 0 || j.get() == 4 || j.get() == 8)){
+               showDirectionChooser = true;
+            } else if (i.get() == 4 && (j.get() == 0 || j.get() == 4 || j.get() == 8)){
+               showDirectionChooser = true;
+            } else if (i.get() == 8 && (j.get() == 0 || j.get() == 4 || j.get() == 8)){
+               showDirectionChooser = true;
+            }
+         }
+      });
+      timer.start();
+   }
+
    private void runQuestionAnswerLoop(Square square) {
       Color squareColor = square.getColor();
       String category = (squareColor == Color.WHITE) ?
