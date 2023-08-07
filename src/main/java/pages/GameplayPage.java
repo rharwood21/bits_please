@@ -24,7 +24,7 @@ public class GameplayPage extends JFrame {
    private JPanel playerPanel;
    private GameBoard board = new GameBoard();
    private JDie dice = new JDie();
-   private JButton[][] gameBoardSquares = new JButton[9][9];
+   private JPanel[][] gameBoardSquares = new JPanel[9][9];  // Update to JPanel
    private PlayerPiece[] playerPieces = new PlayerPiece[PlayerData.getPlayerCount()];
    private JPanel gameBoardPanel;
    private BufferedImage image;
@@ -176,20 +176,12 @@ public class GameplayPage extends JFrame {
     * @param squareMargin - Helps with the construction of the Jbuttons.
     */
    private void drawSquare(Square square, Insets squareMargin) {
-      JButton squareGraphics = new JButton();
-      squareGraphics.setMargin(squareMargin);
-
-      ImageIcon icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
-      squareGraphics.setIcon(icon);
+      JPanel squareGraphics = new JPanel();  // Change to JPanel
 
       Dimension squareSize = new Dimension(64, 64);  // example size
       squareGraphics.setMinimumSize(squareSize);
       squareGraphics.setMaximumSize(squareSize);
-
-      // TODO: With pieces, SquareGraphics Should NOT have game logic. REMOVE ME
-      squareGraphics.addActionListener(e -> {  // On "Click" of Square, Show Question/Answer Page with Random Category Question
-         runQuestionAnswerLoop(square);
-      });
+      squareGraphics.setPreferredSize(squareSize);
 
       // Switch to assign labels to some special squares
       String squareLabelText;
