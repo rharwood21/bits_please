@@ -11,12 +11,6 @@ public class JDie extends JButton {
 
     public JDie() {
         setLayout(new FlowLayout(FlowLayout.CENTER));
-        // TODO: Implement ActionListener in GameplayPage for Game-loop built around dice-roll, instead of here.
-        //  Requires board pieces to be implemented.
-        addActionListener(e -> {
-            value = rollDice();
-            repaint();
-        });
     }
 
     @Override

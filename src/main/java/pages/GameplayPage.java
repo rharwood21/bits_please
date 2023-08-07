@@ -24,7 +24,7 @@ public class GameplayPage extends JFrame {
    private JPanel playerPanel;
    private GameBoard board = new GameBoard();
    private JDie dice = new JDie();
-   private JPanel[][] gameBoardSquares = new JPanel[9][9];  // Update to JPanel
+   private Object[][] gameBoardSquares = new Object[9][9];  // Update to JPanel
    private PlayerPiece[] playerPieces = new PlayerPiece[PlayerData.getPlayerCount()];
    private JPanel gameBoardPanel;
    private BufferedImage image;
@@ -38,7 +38,25 @@ public class GameplayPage extends JFrame {
    private int currentPlayerIndex = 0;
    private ImageIcon correctIcon = new ImageIcon(getClass().getResource("/images/correct.png"));
    private ImageIcon incorrectIcon = new ImageIcon(getClass().getResource("/images/incorrect.png"));
-   public enum Direction { UP, DOWN, LEFT, RIGHT }
+   public enum Direction {
+      UP(0, -1), DOWN(0, 1), LEFT(-1, 0), RIGHT(1, 0);
+
+      private final int dx;
+      private final int dy;
+
+      Direction(int dx, int dy) {
+         this.dx = dx;
+         this.dy = dy;
+      }
+
+      public int getDx() {
+         return dx;
+      }
+
+      public int getDy() {
+         return dy;
+      }
+   }
    /**
     * Constructs a pages.GameplayPage object.
     *
@@ -49,6 +67,13 @@ public class GameplayPage extends JFrame {
    Color newBlue = new Color(26, 82, 118);  // Deep blue
    Color newGreen = new Color(26, 82, 60);  // Deep green
    Color newYellow = new Color(238, 208, 63); // Gold-toned yellow
+
+   Map<Integer, GamePiece> indexToPlayerPiece = new HashMap<>();
+   GamePiece player1 = new GamePiece(PlayerData.getPlayerColor(0));
+   GamePiece player2 = new GamePiece(PlayerData.getPlayerColor(1));
+   GamePiece player3 = new GamePiece(PlayerData.getPlayerColor(2));
+   GamePiece player4 = new GamePiece(PlayerData.getPlayerColor(3));
+
 
    public GameplayPage(GameController controller) {
       super("Trivial Compute");
@@ -92,7 +117,8 @@ public class GameplayPage extends JFrame {
             } else {
                // Normal Game Square
                drawSquare(square, squareMargin);
-               addBoardComponent(gameBoardPanel, gameBoardSquares[i][j], i, j, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+               Object[] gameSquareObject = (Object[]) gameBoardSquares[i][j];
+               addBoardComponent(gameBoardPanel, (JPanel)gameSquareObject[0], i, j, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             }
          }
       }
@@ -119,19 +145,23 @@ public class GameplayPage extends JFrame {
       JButton instructionsButton = new JButton("Instructions");
       instructionsButton.addActionListener(e -> controller.showInstructionsPage("GAMEPLAY"));
       // TODO: Dice ActionListener will ACTUALLY run gameplay, once we have Player board pieces
-//      dice.addActionListener(e -> {
-//         // Primary Game Loop
-//         dice.setBackground(Color.WHITE);
-//         int roll_value = dice.rollDice(); // TODO: Use this for moving player on gameboard
-//         dice.repaintDice();
-//         try {
-//            Thread.sleep(3000); // Sleep 3 Seconds
-//         } catch (InterruptedException ex) {/* Ignore */}
-//
-//         // Main Q&A Game-Loop
-//         Square square; // TODO: Get Square from player piece
-//         runQuestionAnswerLoop(square);
-//      });
+      dice.addActionListener(e -> {
+         // Primary Game Loop
+         dice.setBackground(Color.WHITE);
+         int roll_value = dice.rollDice(); // TODO: Use this for moving player on gameboard
+         dice.repaintDice();
+
+         // Main Move-Player-Piece Loop
+         int[] newSquareIndices = runMovePlayerLoop(roll_value);
+
+         // Get New Square
+         Square newSquare = board.getSquare(newSquareIndices[0], newSquareIndices[1]);
+
+         // Main Q&A Game-Loop
+         runQuestionAnswerLoop(newSquare);
+
+         dice.setBackground(Color.YELLOW);
+      });
       // UNCOMMENT ABOVE ME
       buttonPanel.add(currentPlayerLabel);
       buttonPanel.add(dice);
@@ -161,6 +191,16 @@ public class GameplayPage extends JFrame {
       colorToScoreboardIndexMap.put(Color.YELLOW, 1);
       colorToScoreboardIndexMap.put(Color.GREEN, 2);
       colorToScoreboardIndexMap.put(Color.BLUE, 3);
+
+      indexToPlayerPiece.put(0, player1);
+      indexToPlayerPiece.put(1, player2);
+      indexToPlayerPiece.put(2, player3);
+      indexToPlayerPiece.put(3, player4);
+
+      // Initialize All Players to [0, 0]
+      for (int i = 0; i < PlayerData.getPlayerCount(); i++){
+         setPlayerPiecePosition(i, 0, 0);
+      }
    }
 
 
@@ -176,7 +216,7 @@ public class GameplayPage extends JFrame {
     * @param squareMargin - Helps with the construction of the Jbuttons.
     */
    private void drawSquare(Square square, Insets squareMargin) {
-      JPanel squareGraphics = new JPanel();  // Change to JPanel
+      JPanel squareGraphics = new JPanel(new BorderLayout());  // Change to JPanel
 
       Dimension squareSize = new Dimension(64, 64);  // example size
       squareGraphics.setMinimumSize(squareSize);
@@ -205,30 +245,62 @@ public class GameplayPage extends JFrame {
       JPanel labelPanel = new JPanel(new GridBagLayout());
       labelPanel.setOpaque(false); // Make the JPanel transparent
       labelPanel.add(label);
-      squareGraphics.add(labelPanel);
+      squareGraphics.add(labelPanel, BorderLayout.NORTH);
+
+      // Create a JPanel for holding game pieces and add it to CENTER of squareGraphics
+      JPanel piecesPanel = new JPanel(new GridLayout(2,2)); // This will hold the game pieces. Choose an appropriate layout.
+      squareGraphics.add(piecesPanel);
 
       // Ignoring dead squares which are not drawn. This space is used for player score graphics.
+      Color bgColor = Color.WHITE;
       if (square.getType().equals("Dead")) {
-         squareGraphics.setBackground(Color.WHITE);
          squareGraphics.setEnabled(false);
       } else {
          if (square.getColor().equals(Color.RED)) {
-            squareGraphics.setBackground(newRed);
+            bgColor = newRed;
          } else if (square.getColor().equals(Color.YELLOW)) {
-            squareGraphics.setBackground(newYellow);
+            bgColor = newYellow;
          } else if (square.getColor().equals(Color.BLUE)) {
-            squareGraphics.setBackground(newBlue);
+            bgColor = newBlue;
          } else if (square.getColor().equals(Color.GREEN)) {
-            squareGraphics.setBackground(newGreen);
+            bgColor = newGreen;
          } else if (square.getColor().equals(Color.WHITE)) {// Should only be the Trivial Compute Square in the middle
-            squareGraphics.setBackground(Color.WHITE);
+            bgColor = Color.WHITE;
          } else if (square.getColor().equals(Color.PINK)) {// Only the Roll Again Squares on the corners.
-            squareGraphics.setBackground(Color.WHITE);
+            bgColor = Color.WHITE;
          }
+         squareGraphics.setBackground(bgColor);
+         piecesPanel.setBackground(bgColor);
 
       }
       // Finally, add the JButton to gameBoardSquares.
-      gameBoardSquares[square.getBoardPosition().x][square.getBoardPosition().y] = squareGraphics;
+      gameBoardSquares[square.getBoardPosition().x][square.getBoardPosition().y] = new Object[] {squareGraphics, piecesPanel};
+   }
+
+   private void setPlayerPiecePosition(int playerIndex, int i, int j){
+      // Remove Player from Old Square
+      int[] oldPosition = PlayerData.getPlayerPosition(playerIndex);
+      Object[] oldSquareObj = (Object[]) gameBoardSquares[oldPosition[0]][oldPosition[1]];
+      JPanel oldSquare = (JPanel) oldSquareObj[0];
+      JPanel oldPiecesPanel = (JPanel) oldSquareObj[1];
+
+      // Get Reference to Player Piece
+      GamePiece playerPiece = indexToPlayerPiece.get(playerIndex);
+      oldPiecesPanel.remove(playerPiece);
+
+      // Set New Position
+      PlayerData.setPlayerPositions(playerIndex, i, j);
+
+      // Get New Square
+      Object[] newSquareObj = (Object[]) gameBoardSquares[i][j];
+      JPanel newSquare = (JPanel) newSquareObj[0];
+      JPanel newPiecesPanel = (JPanel) newSquareObj[1];
+
+      // Add to Board JPanel Square
+      newPiecesPanel.add(playerPiece);
+
+      oldSquare.revalidate();oldSquare.repaint();
+      newSquare.revalidate();newSquare.repaint();
    }
 
    // Method to update the player names in the GUI
@@ -326,9 +398,43 @@ public class GameplayPage extends JFrame {
       repaint();
    }
 
+   private int[] runMovePlayerLoop(int spacesToMove){
+      int[] currentPosition = PlayerData.getPlayerPosition(currentPlayerIndex);
+      int i = currentPosition[0];
+      int j = currentPosition[1];
+      boolean showDirectionChooser = true;
+      Direction moveDirection = null;
+      
+      while (true){
+         // Get Player Direction Choice
+         if (showDirectionChooser){
+            moveDirection = chooseMovementDirection();
+            showDirectionChooser = false;
+         }
+         // Validate Move and Increment in Direction
+         if (isValidMove(i, j, moveDirection)){
+            i = i + moveDirection.getDx();
+            j = j + moveDirection.getDy();
+            setPlayerPiecePosition(currentPlayerIndex, i, j);
+            spacesToMove -= 1; // Decrement Spaces to Move
+            // TODO: Sleep here to add delay
+         } else {
+            showDirectionChooser = true;
+         }
+         // Show Direction Chooser on Cross-Sections
+         if (i == 0 && (j == 0 || j == 4 || j == 8)){
+            showDirectionChooser = true;
+         } else if (i == 4 && (j == 0 || j == 4 || j == 8)){
+            showDirectionChooser = true;
+         } else if (i == 8 && (j == 0 || j == 4 || j == 8)){
+            showDirectionChooser = true;
+         }
+         // Break After No More Spaces
+         if (spacesToMove == 0){ break; }
+      }
+      return new int[]{i, j};
+   }
    private void runQuestionAnswerLoop(Square square) {
-      Direction directionChoice = chooseMovementDirection();
-      // TODO: Use Direction Choice with Player Pieces to Determine Square Landed-on
       Color squareColor = square.getColor();
       String category = (squareColor == Color.WHITE) ?
               launchChooseACategory() :
@@ -467,6 +573,30 @@ public class GameplayPage extends JFrame {
             System.out.println(directionChoice.get());
             return directionChoice.get();
          }
+      }
+   }
+
+   private void sleepNSeconds(int seconds){
+      try {
+         Thread.sleep(seconds * 1000L);
+      } catch (InterruptedException e){}
+   }
+
+   private boolean isValidMove(int i, int j, Direction direction) {
+      int newI = i + direction.getDx();
+      int newJ = j + direction.getDy();
+
+      // Check if new position is out of board bounds
+      if (newI < 0 || newI >= 9 || newJ < 0 || newJ >= 9) {
+         return false;
+      }
+
+      Object[] newSquareObj = (Object[]) gameBoardSquares[newI][newJ];
+      try {
+         JPanel squareGraphics = (JPanel) newSquareObj[0];
+         return squareGraphics.isEnabled();
+      } catch (NullPointerException e){
+         return false;
       }
    }
 }
