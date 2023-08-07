@@ -70,7 +70,11 @@ public class PlayerData {
      * @return color
      */
     public static Color getPlayerColor(int playerIndex) {
-        return playerColors[playerIndex];
+        try {
+            return playerColors[playerIndex];
+        } catch (ArrayIndexOutOfBoundsException e){
+            return null;
+        }
     }
     public static int getUniqueColorCount(){
         return uniqCount(playerColors);
@@ -100,6 +104,12 @@ public class PlayerData {
         int[][] playerPosition = new int[1][2];
         playerPosition[0][0] = playerPositions[playerIndex][0];
         playerPosition[0][1] = playerPositions[playerIndex][1];
+        return playerPosition;
+    }
+    public static int[] getPlayerPosition(int playerIndex) {
+        int[] playerPosition = new int[2];
+        playerPosition[0] = playerPositions[playerIndex][0];  // i
+        playerPosition[1] = playerPositions[playerIndex][1];  // j
         return playerPosition;
     }
 

@@ -16,6 +16,7 @@ public class GameController {
     private GameplayPage gameplayPage;
     private WinnerPage winnerPage;
     private InstructionsPage instructionsPage;
+    
     /**
      * Constructs a game.GameController object.
      * Initializes the GUI screens for the game.
@@ -31,6 +32,7 @@ public class GameController {
         // Start the application by displaying the welcome page
         showWelcomePage();
     }
+    
     /**
      * Shows the welcome page.
      */
@@ -61,6 +63,7 @@ public class GameController {
     }
     /**
      * Shows the gameplay page.
+     * @param playersInitialized - boolean to confirm player initialization
      */
     public void showGameplayPage(boolean playersInitialized) {
         disposePages();
@@ -81,6 +84,7 @@ public class GameController {
     }
     /**
      * Shows the winner page.
+     * @param winnerIndex - index of winning player
      */
     public void showWinnerPage(int winnerIndex) {
         disposePages();
@@ -89,6 +93,7 @@ public class GameController {
     }
     /**
      * Shows the Instructions page.
+     * @param returnPage - string defining the return page
      */
     public void showInstructionsPage(String returnPage){
         disposePages();
@@ -97,6 +102,7 @@ public class GameController {
     }
 
     // Other methods for managing the game flow, handling user input, etc.
+    // TODO: Consider only disposing the page that is currently active by passing it as arg to here
     private void disposePages(){
         // Dispose all locations instructions can be called from
         welcomePage.dispose();
