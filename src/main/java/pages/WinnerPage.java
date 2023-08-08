@@ -47,6 +47,8 @@ public class WinnerPage extends JFrame {
       restartButton.addActionListener(e -> {
          // Pass control to the controller or navigate to the next page
          // Example: restarting the game by going back to the welcome page
+//         PlayerData.flushPlayerScores();
+         this.setVisible(false);
          controller.showWelcomePage();
       });
 

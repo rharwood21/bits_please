@@ -98,7 +98,7 @@ public class PlayerNameInputPage extends JFrame {
 
          int currentPlayers = PlayerData.getPlayerCount();
          int uniqColors = PlayerData.getUniqueColorCount();
-         System.out.println(uniqColors + " " + currentPlayers + " " + playerNames[0] + " " + playerNames[1] + " "
+         System.out.println(numPlayers + " " + playerNames[0] + " " + playerNames[1] + " "
                + playerNames[2] + " " + playerNames[3]
                + " " + playerColors[0] + " " + playerColors[1] + " " + playerColors[2] + " " + playerColors[3]); // TODO: Remove Me
 
@@ -115,7 +115,7 @@ public class PlayerNameInputPage extends JFrame {
          }
          // Pass player names to the controller or navigate to the next page
          // Example: navigating to the question editor page
-
+         PlayerData.flushPlayerScores();
          controller.showGameplayPage(true);
          GameData.setQuestionList(Question.retrieveAllDefaultQuestions());
 

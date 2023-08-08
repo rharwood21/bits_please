@@ -31,9 +31,9 @@ public class PlayerData {
 
     // Singleton getInstance method
     public static PlayerData getInstance(int numPlayers, String[] playerNames, Color[] playerColors) {
-        if (instance == null) {
-            instance = new PlayerData(numPlayers, playerNames, playerColors);
-        }
+//        if (instance == null) {
+        instance = new PlayerData(numPlayers, playerNames, playerColors);
+//        }
         return instance;
     }
 
@@ -94,11 +94,17 @@ public class PlayerData {
         //TODO: may want to make this to flush all player data instead.
         playerNames = new String[4];
         playerCount = 0;
+//        instance = null; // to make sure it refreshes for a new game
     }
 
     public static void flushPlayerColors(){
         //TODO: may want to make this to flush all player data instead.
         playerColors = new Color[4];
+    }
+
+    public static void flushPlayerScores(){
+        //TODO: may want to make this to flush all player data instead.
+        playerScores = new boolean[4][4];
     }
     public static int[][] getPlayerPositions(int playerIndex) {
         int[][] playerPosition = new int[1][2];
