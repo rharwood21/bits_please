@@ -332,6 +332,7 @@ public class GameplayPage extends JFrame {
       // Create the scoreboard main panel
       JPanel scoreboard = new JPanel(new BorderLayout());
       scoreboard.setBorder(new LineBorder(Color.BLACK)); // Add a border if you want
+      scoreboard.setBackground(PlayerData.getPlayerColor(scoreboardsCreated));
 
       // Create a label for the player's name
       JLabel playerNameLabel = new JLabel(playerName); // This is just a placeholder. Replace with the actual name when required.

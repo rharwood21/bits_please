@@ -106,19 +106,30 @@ public class WelcomePage extends JFrame {
          protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             setPreferredSize(new Dimension(screenWidth / 3, screenHeight / 3));
-            setBorder(new EmptyBorder(0, (int) (screenWidth / 2.5), 0, (int) (screenWidth / 2.5)));
+            setBorder(new EmptyBorder(0, (int) (screenWidth / 4), 0, (int) (screenWidth / 4)));
          }
       };
       buttonPanel.setLayout(new GridLayout(3, 1));
       buttonPanel.setBackground(new Color(248, 237, 212));
 
-      JButton nextButton = new JButton("Begin Gameplay");
-      nextButton.setFont(new Font("Roboto", Font.BOLD, 20));
-      nextButton.addActionListener(e -> {
+      JPanel playOptionsPanel = new JPanel(new GridLayout(1,2));
+      JButton playLocallyButton = new JButton("Play Locally");
+      playLocallyButton.setFont(new Font("Roboto", Font.BOLD, 20));
+      playLocallyButton.addActionListener(e -> {
          // Pass control to the controller or navigate to the next page
          // Example: navigating to the game setup input page
          controller.showGameSettingsPage();
       });
+      JButton playOnlineButton = new JButton("Play Online");
+      playOnlineButton.setFont(new Font("Roboto", Font.BOLD, 20));
+      playOnlineButton.addActionListener(e -> {
+         // Pass control to the controller or navigate to the next page
+         // Example: navigating to the game setup input page
+         controller.showGameSettingsPage();
+      });
+      playOptionsPanel.add(playOnlineButton);
+      playOptionsPanel.add(playLocallyButton);
+
       JButton instructionsButton = new JButton("Instructions");
       instructionsButton.setFont(new Font("Roboto", Font.BOLD, 20)); // change the font and its size
       instructionsButton.addActionListener(e -> controller.showInstructionsPage("WELCOME"));
@@ -130,7 +141,7 @@ public class WelcomePage extends JFrame {
       teacherPageButton.addActionListener(e -> controller.showQuestionEditorPage());
       // TODO: make action listener and actual page class for teacher homepage.
       buttonPanel.add(instructionsButton);
-      buttonPanel.add(nextButton);
+      buttonPanel.add(playOptionsPanel);
       buttonPanel.add(teacherPageButton);
 
       // Add components to the frame

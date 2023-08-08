@@ -4,5 +4,6 @@ api.endpoint.create-questions=https://bits-please-api-gateway-2a7afdhw.uc.gatewa
 api.endpoint.initialize-client=https://bits-please-api-gateway-2a7afdhw.uc.gateway.dev/initialize_client
 api.endpoint.modify-question=https://bits-please-api-gateway-2a7afdhw.uc.gateway.dev/modify_question
 api.endpoint.retrieve-question=https://bits-please-api-gateway-2a7afdhw.uc.gateway.dev/retrieve_question
+api.endpoint.multiplayer.websocket=ws://localhost:8887
 # User Persistence
 user.persist.session=true

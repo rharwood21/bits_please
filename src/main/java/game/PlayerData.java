@@ -152,4 +152,9 @@ public class PlayerData {
         }
         return -1;
     }
+
+    public static int getClientMultiplayerIndex(){
+        // TODO: Implement
+        return 0;
+    }
 }

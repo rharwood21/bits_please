@@ -8,12 +8,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-class ConfigReader {
+public class ConfigReader {
     private static final String CONFIG_FILE_NAME = "config.ini";
     private static final String CONFIG_FILE_PATH = getConfigFilePath();
     private Properties properties;
 
-    ConfigReader() {
+    public ConfigReader() {
         properties = new Properties();
         try {
             FileInputStream inputStream = new FileInputStream(CONFIG_FILE_PATH);
@@ -39,6 +39,9 @@ class ConfigReader {
     }
     String getRetrieveQuestionEndpoint(){
         return properties.getProperty("api.endpoint.retrieve-question");
+    }
+    public String getMultiplayerWebSocketEndpoint(){
+        return properties.getProperty("api.endpoint.multiplayer.websocket");
     }
 
     Properties getProperties(){
