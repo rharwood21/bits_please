@@ -136,7 +136,7 @@ public class GameplayPage extends JFrame {
       playerPanel.setLayout(new GridLayout(1, 4));
 
       // Next Button/Panel
-      currentPlayerLabel = new JLabel(PlayerData.getPlayerName(currentPlayerIndex));
+      currentPlayerLabel = new JLabel("Current Player: " + PlayerData.getPlayerName(currentPlayerIndex));
       currentPlayerLabel.setBorder(new LineBorder(Color.BLACK));
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
       JButton nextButton = new JButton("Remove Me: Next");
@@ -398,7 +398,7 @@ public class GameplayPage extends JFrame {
       }
       currentPlayerIndex++;
       currentPlayerName = PlayerData.getPlayerName(currentPlayerIndex);
-      currentPlayerLabel.setText(currentPlayerName);
+      currentPlayerLabel.setText("Current Player: " + currentPlayerName);
       dice.setBackground(Color.YELLOW);
       revalidate();
       repaint();
