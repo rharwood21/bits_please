@@ -242,7 +242,7 @@ public class QuestionEditorPage extends JFrame {
             tempQuestionList = Question.retrieveAllClientQuestions();
          }
       } catch (APIRequestException e) {
-         JOptionPane.showMessageDialog(this, "API Request Failed: Please Ensure DB is Active.", "Error",
+         JOptionPane.showMessageDialog(this, "API Request Failed: Failed to Refresh Questions in Question Editor Page.", "Refresh Questions",
                JOptionPane.ERROR_MESSAGE);
       }
       GameData.setQuestionList(tempQuestionList);
@@ -270,8 +270,8 @@ public class QuestionEditorPage extends JFrame {
                try {
                   deleteQuestion.deleteQuestion();
                } catch (APIRequestException e) {
-                  JOptionPane.showMessageDialog(this, "API Request Failed: Please Ensure DB is Active.\n" +
-                        "Delete Question Failed.", "Delete Question", JOptionPane.INFORMATION_MESSAGE);
+                  JOptionPane.showMessageDialog(this, "API Request Failed: Delete Question Failed.\n" +
+                          "Please Ensure DB is Active.", "Delete Question", JOptionPane.INFORMATION_MESSAGE);
                   return;
                }
             }
