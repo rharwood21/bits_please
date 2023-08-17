@@ -2,6 +2,8 @@ package pages;
 
 import game.GameController;
 import game.GameData;
+import multiplayer.GameplayController;
+import org.json.JSONArray;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -9,8 +11,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents the player name input page of the Trivial Compute Game. Allows the
@@ -19,6 +19,7 @@ import java.util.Map;
 public class GameSettingsPage extends JFrame {
    private GameController controller;
    private BufferedImage image;
+   private boolean isMultiplayerController;
 
    /**
     * Constructs a pages.GameSettingsPage object.
@@ -62,11 +63,6 @@ public class GameSettingsPage extends JFrame {
       // TODO: De-duplicate, and dynamically retrieve categories from questionList/defaultQuestionList in GameData
       String[] subjectChoices = { "History", "Entertainment", "Science", "Geography", "Computer Science" }; // Default Categories in DB
       String[] colorChoices = { "Blue", "Red", "Green", "Yellow" };
-      Map<String, Color> stringColorMap = new HashMap<>();
-      stringColorMap.put(colorChoices[0], Color.BLUE);
-      stringColorMap.put(colorChoices[1], Color.RED);
-      stringColorMap.put(colorChoices[2], Color.GREEN);
-      stringColorMap.put(colorChoices[3], Color.YELLOW);
 
       // Set the first subject
       final JComboBox<String> subject1CB = new JComboBox<String>(subjectChoices);
@@ -126,10 +122,20 @@ public class GameSettingsPage extends JFrame {
 
          // save the categories and colors
          GameData.flushCategories();
-         GameData.setCategoryAndColor(0, (String) subject1CB.getSelectedItem(), stringColorMap.get(color1CB.getSelectedItem()));
-         GameData.setCategoryAndColor(1, (String) subject2CB.getSelectedItem(), stringColorMap.get(color2CB.getSelectedItem()));
-         GameData.setCategoryAndColor(2, (String) subject3CB.getSelectedItem(), stringColorMap.get(color3CB.getSelectedItem()));
-         GameData.setCategoryAndColor(3, (String) subject4CB.getSelectedItem(), stringColorMap.get(color4CB.getSelectedItem()));
+         if (controller.isOnlineGame() && controller.isMultiplayerController()){
+            JSONArray categories = new JSONArray();
+            JSONArray colors = new JSONArray();
+            categories.put(subject1CB.getSelectedItem());categories.put(subject2CB.getSelectedItem());
+            categories.put(subject3CB.getSelectedItem());categories.put(subject4CB.getSelectedItem());
+            colors.put(color1CB.getSelectedItem());colors.put(color2CB.getSelectedItem());
+            colors.put(color3CB.getSelectedItem());colors.put(color4CB.getSelectedItem());
+            GameplayController.doSetCategoryColors(categories, colors);
+         }
+         GameData.setCategoryAndColor(0, (String) subject1CB.getSelectedItem(), GameData.getColorByName((String) color1CB.getSelectedItem()));
+         GameData.setCategoryAndColor(1, (String) subject2CB.getSelectedItem(), GameData.getColorByName((String) color2CB.getSelectedItem()));
+         GameData.setCategoryAndColor(2, (String) subject3CB.getSelectedItem(), GameData.getColorByName((String) color3CB.getSelectedItem()));
+         GameData.setCategoryAndColor(3, (String) subject4CB.getSelectedItem(), GameData.getColorByName((String) color4CB.getSelectedItem()));
+
 
          int uniqCategories = GameData.getUniqueCategoryCount();
          int uniqColors = GameData.getUniqueColorCount();
@@ -140,7 +146,12 @@ public class GameSettingsPage extends JFrame {
             return;
          }
          // navigate to the next page
-         controller.showPlayerNameInputPage();
+         if (controller.isOnlineGame() && controller.isMultiplayerController()){
+            controller.showGameplayPage(true);
+         } else {
+            controller.showPlayerNameInputPage();
+         }
+
       });
       JButton backButton = new JButton("Back");
       backButton.addActionListener(e -> controller.showWelcomePage());

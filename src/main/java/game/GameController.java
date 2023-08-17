@@ -1,6 +1,7 @@
 package game;
 
 import bits_please_api.APIRequestException;
+import multiplayer.GameplayController;
 import pages.*;
 
 import javax.swing.*;
@@ -16,6 +17,9 @@ public class GameController {
     private GameplayPage gameplayPage;
     private WinnerPage winnerPage;
     private InstructionsPage instructionsPage;
+    private boolean isOnlineGame;
+    private boolean isMultiplayerController;
+    private GameplayController multiplayerController;
     
     /**
      * Constructs a game.GameController object.
@@ -26,7 +30,7 @@ public class GameController {
         welcomePage = new WelcomePage(this);
         gameSettingsPage = new GameSettingsPage(this);
         playerNameInputPage = new PlayerNameInputPage(this);
-        questionEditorPage = new QuestionEditorPage(this);
+        //questionEditorPage = new QuestionEditorPage(this);
         instructionsPage = new InstructionsPage(this);
 
         // Start the application by displaying the welcome page
@@ -52,6 +56,7 @@ public class GameController {
      */
     public void showPlayerNameInputPage() {
         disposePages();
+        playerNameInputPage.refreshPlayerNameInputPage();
         playerNameInputPage.setVisible(true);
     }
     /**
@@ -108,10 +113,40 @@ public class GameController {
         welcomePage.dispose();
         playerNameInputPage.dispose();
         gameSettingsPage.dispose();
-        questionEditorPage.dispose();
+        //questionEditorPage.dispose();
         if (gameplayPage != null){
             gameplayPage.dispose();
         }
         instructionsPage.dispose();
+    }
+
+    public boolean isMultiplayerController() {
+        return isMultiplayerController;
+    }
+
+    public void setMultiplayerController(boolean multiplayerController) {
+        isMultiplayerController = multiplayerController;
+    }
+
+    public boolean isOnlineGame() {
+        return isOnlineGame;
+    }
+
+    public void setOnlineGame(boolean onlineGame) {
+        isOnlineGame = onlineGame;
+    }
+
+    public void initializeMultiplayerController(){
+        multiplayerController = GameplayController.getInstance(this);
+    }
+    public GameplayController getMultiplayerController(){
+        return multiplayerController;
+    }
+
+    public void refreshNameInputPage(){
+        playerNameInputPage.refreshPlayerNameInputPage();
+    }
+    public void playerColorChoice(int playerIndex, String colorString) {
+        playerNameInputPage.playerChoseColor(playerIndex, colorString);
     }
 }

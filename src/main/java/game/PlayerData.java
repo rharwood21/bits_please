@@ -1,5 +1,7 @@
 package game;
 
+import org.json.JSONArray;
+
 import java.awt.*;
 import java.util.Arrays;
 
@@ -7,7 +9,7 @@ import java.util.Arrays;
  *
  */
 public class PlayerData {
-    private static String[] playerNames;
+    private static String[] playerNames = new String[4];
     private static int playerCount;
     // a 2D array to track player positions
     private static int[][] playerPositions;
@@ -18,6 +20,7 @@ public class PlayerData {
 
     // Singleton instance
     private static PlayerData instance = null;
+    private static int multiplayerIndex;
 
     private PlayerData(int numPlayers, String[] playerNames, Color[] playerColors) {
         playerPositions = new int[numPlayers][2];
@@ -153,8 +156,33 @@ public class PlayerData {
         return -1;
     }
 
+    /* ********** Multiplayer Methods ********** */
+    public static void setMultiplayerNamesAndOrder(JSONArray multiplayerPlayerNames, JSONArray multiplayerOrder){
+        playerNames = new String[multiplayerPlayerNames.length()];
+        for (int i = 0; i < multiplayerPlayerNames.length(); i++){
+            int order = multiplayerOrder.getInt(i);
+            String name = multiplayerPlayerNames.getString(order);
+            playerNames[order] = name;
+        }
+        playerCount = playerNames.length;
+    }
+
+    public static String[] getPlayerNames() {
+        return playerNames;
+    }
+
     public static int getClientMultiplayerIndex(){
-        // TODO: Implement
-        return 0;
+        return multiplayerIndex;
+    }
+    public static void setClientMultiplayerIndex(int index){
+        multiplayerIndex = index;
+    }
+
+    public static void setPlayerColors(JSONArray playerColors) {
+        Color[] colors = new Color[playerColors.length()];
+        for (int i = 0; i < playerColors.length(); i++){
+            colors[i] = GameData.getColorByName(playerColors.getString(i));
+        }
+        PlayerData.playerColors = colors;
     }
 }

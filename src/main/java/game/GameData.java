@@ -2,6 +2,7 @@ package game;
 
 import bits_please_api.APIRequestException;
 import bits_please_api.QuestionDifficulty;
+import org.json.JSONArray;
 
 import java.awt.*;
 import java.util.List;
@@ -91,6 +92,7 @@ public class GameData {
     public static void flushCategories(){
         gameCategories = new String[4];
         categoryColors = new Color[4];
+        colorToCategoryMap = new HashMap<>();
     }
 
     /**
@@ -156,5 +158,24 @@ public class GameData {
         Random random = new Random();
         return defaultQuestionList.get(random.nextInt(defaultQuestionList.size()));
     }
+    public static Color getColorByName(String name) {
+        try {
+            return (Color)Color.class.getField(name.toUpperCase()).get(null);
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    /* ********** Multiplayer Methods ********** */
+    public static void setMultiplayerCategoriesAndColor(JSONArray categories, JSONArray colors){
+        flushCategories();
+        for (int i = 0; i < categories.length(); i++){
+            String category = categories.getString(i);
+            Color color = getColorByName(colors.getString(i));
+            gameCategories[i] = category;
+            categoryColors[i] = color;
+            colorToCategoryMap.put(color, category);
+        }
+    }
 }

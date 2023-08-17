@@ -4,11 +4,14 @@ import game.GameController;
 import game.GameData;
 import game.PlayerData;
 import game.Question;
+import multiplayer.GameplayController;
+import org.json.JSONArray;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,13 +23,18 @@ import java.util.Map;
  */
 public class PlayerNameInputPage extends JFrame {
    private GameController controller;
+
    private JTextField[] nameFields;
    private JComboBox<String>[] colorCBList;
 
    private String[] playerNames = new String[4];
    private Color[] playerColors = new Color[4];
    private static Map<String, Color> nameToColorMap = new HashMap<>();
+   private static Map<String, Integer> nameToColorIndexMap = new HashMap<>();
    private BufferedImage image;
+   private JButton nextButton;
+   private boolean comboboxListenerAdded = false;
+   private boolean programmaticallySetting = false;
 
    /**
     * Constructs a pages.PlayerNameInputPage object.
@@ -76,19 +84,22 @@ public class PlayerNameInputPage extends JFrame {
 
       JPanel buttonPanel = new JPanel();
       buttonPanel.setBackground(new Color(248, 237, 212));
-      JButton nextButton = new JButton("Next");
+
+      nextButton = new JButton("Next");
       nextButton.addActionListener(e -> {
          // For each new game, there shall be new playerData.
          PlayerData.flushPlayerNames();
          PlayerData.flushPlayerColors();
          int numPlayers = 0;
 
+         String[] colorNames = new String[nameFields.length];
          for (int i = 0; i < nameFields.length; i++) {
             String playerNameTemp = nameFields[i].getText();
             // If the field is empty, don't make a player
             if (!playerNameTemp.trim().isEmpty()) {
                playerNames[i] = playerNameTemp;
                playerColors[i] = nameToColorMap.get(colorCBList[i].getSelectedItem());
+               colorNames[i] = (String) colorCBList[i].getSelectedItem();
                numPlayers++;
             }
          }
@@ -98,9 +109,6 @@ public class PlayerNameInputPage extends JFrame {
 
          int currentPlayers = PlayerData.getPlayerCount();
          int uniqColors = PlayerData.getUniqueColorCount();
-         System.out.println(uniqColors + " " + currentPlayers + " " + playerNames[0] + " " + playerNames[1] + " "
-               + playerNames[2] + " " + playerNames[3]
-               + " " + playerColors[0] + " " + playerColors[1] + " " + playerColors[2] + " " + playerColors[3]); // TODO: Remove Me
 
          if (currentPlayers < 2 || currentPlayers > 4) {
             JOptionPane.showMessageDialog(null, "Invalid Number of Players!\nPlease input 2-4 names.", "Error",
@@ -115,13 +123,24 @@ public class PlayerNameInputPage extends JFrame {
          }
          // Pass player names to the controller or navigate to the next page
          // Example: navigating to the question editor page
-
-         controller.showGameplayPage(true);
          GameData.setQuestionList(Question.retrieveAllDefaultQuestions());
-
+         if (controller.isOnlineGame() && controller.isMultiplayerController()){
+            GameplayController.doSetPlayerColors(new JSONArray(colorNames));
+            controller.showGameSettingsPage();
+         } else {
+            controller.showGameplayPage(true);
+         }
       });
       JButton backButton = new JButton("Back");
-      backButton.addActionListener(e -> controller.showGameSettingsPage());
+      backButton.addActionListener(e -> {
+         if (controller.isOnlineGame() && controller.isMultiplayerController()){ // Online; Is Controller
+            controller.showGameSettingsPage();
+         } else if (controller.isOnlineGame() && !controller.isMultiplayerController()){ // Online; Not Controller
+            controller.showWelcomePage();
+         } else { // Not Online Game
+            controller.showGameSettingsPage();
+         }
+      });
       buttonPanel.add(backButton);
       buttonPanel.add(nextButton);
 
@@ -134,6 +153,9 @@ public class PlayerNameInputPage extends JFrame {
       // inputPanel.add(gapLabel);
       int playerNum = 1;
       Font labelFont = new Font("Roboto", Font.PLAIN, 24);
+
+
+
       // set colors
       String[] colorChoices = { "Blue", "Red", "Green", "Yellow" };
       JComboBox<String> colorCB = setColorOptions(colorChoices, 0);
@@ -178,9 +200,55 @@ public class PlayerNameInputPage extends JFrame {
    private JComboBox<String> setColorOptions(String[] colorChoices, int i) {
       JComboBox<String> colorCB = new JComboBox<>(colorChoices);
       colorCB.setRenderer(new CustomComboBoxRenderer());
-      colorCB.setSelectedIndex(i);
+      colorCB.setSelectedItem(null);
       colorCB.setVisible(true);
+      nameToColorIndexMap.put(colorChoices[i], i);
       return colorCB;
    }
 
+   public void refreshPlayerNameInputPage(){
+      if (controller.isOnlineGame()){
+         // Disable Next Button if not Controller
+         if (!controller.isMultiplayerController()){
+            nextButton.setText("Waiting for Teacher to Start Game");
+            nextButton.setEnabled(false);
+         } else {
+            nextButton.setText("All Players Present: Go to Settings");
+         }
+
+         if (!comboboxListenerAdded) {
+            // Add Item Listener for Multiplayer
+            for (int i = 0; i < colorCBList.length; i++){
+               colorCBList[i].addItemListener(e -> {
+                  if (e.getStateChange() == ItemEvent.SELECTED && !programmaticallySetting) {
+                     String selectedItem = (String) e.getItem();
+                     GameplayController.doColorChoice(selectedItem);
+                  }
+               });
+            }
+            comboboxListenerAdded = true;
+         }
+
+         // Update Player Names from PlayerData, make non-editable
+         String[] currentPlayers = PlayerData.getPlayerNames();
+         for (int i = 0; i < nameFields.length; i++){
+            // Set All Names/DropDowns Disabled, if not own
+            boolean isCurrentPlayer = (i == PlayerData.getClientMultiplayerIndex());
+            nameFields[i].setEnabled(isCurrentPlayer); // Self - White, Others - Gray
+            colorCBList[i].setEnabled(isCurrentPlayer);
+         }
+         for (int i = 0; i < currentPlayers.length; i++){
+            nameFields[i].setText(currentPlayers[i]);
+         }
+      }
+      revalidate();
+      repaint();
+   }
+
+   public void playerChoseColor(int playerIndex, String color){
+      programmaticallySetting = true;
+      colorCBList[playerIndex].setSelectedIndex(nameToColorIndexMap.get(color));
+      programmaticallySetting = false;
+      refreshPlayerNameInputPage();
+   }
 }

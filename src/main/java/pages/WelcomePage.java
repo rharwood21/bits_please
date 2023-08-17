@@ -1,6 +1,9 @@
 package pages;
 
 import game.GameController;
+import game.PlayerData;
+import multiplayer.GameplayController;
+import multiplayer.MultiplayerException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -118,14 +121,57 @@ public class WelcomePage extends JFrame {
       playLocallyButton.addActionListener(e -> {
          // Pass control to the controller or navigate to the next page
          // Example: navigating to the game setup input page
+         controller.setOnlineGame(false);
+         controller.setMultiplayerController(false);
          controller.showGameSettingsPage();
       });
       JButton playOnlineButton = new JButton("Play Online");
       playOnlineButton.setFont(new Font("Roboto", Font.BOLD, 20));
       playOnlineButton.addActionListener(e -> {
-         // Pass control to the controller or navigate to the next page
-         // Example: navigating to the game setup input page
-         controller.showGameSettingsPage();
+         controller.initializeMultiplayerController();
+         GameplayController gameplayController = controller.getMultiplayerController();
+
+         // Prompt User to Start Game or Join Existing Game
+         String[] options = {"Join a game (with code)", "Start a new game"};
+         int choice = JOptionPane.showOptionDialog(null,
+                 "Would you like to join a game with a code, or start a new game?",
+                 "Game Option",
+                 JOptionPane.DEFAULT_OPTION,
+                 JOptionPane.QUESTION_MESSAGE,
+                 null,
+                 options,
+                 options[0]);
+
+         // Join Game with Code
+         if (choice == 0){
+            String nameChoice = promptForUsername();
+            String roomKey = promptForRoomKey();
+            try {
+               GameplayController.doJoinRoom(roomKey, nameChoice);
+            } catch (MultiplayerException ex){
+               JOptionPane.showMessageDialog(this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+               return;
+            }
+
+            controller.setOnlineGame(true);
+            controller.setMultiplayerController(false);
+            controller.showPlayerNameInputPage();
+         }
+         // Start New Game
+         else if (choice == 1) {
+            String nameChoice = promptForUsername();
+            try {
+               PlayerData.setPlayerName(0, nameChoice);
+               GameplayController.doInitialize(nameChoice);
+            } catch (MultiplayerException ex){
+               JOptionPane.showMessageDialog(this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            gameplayController.showRoomKey(true);
+
+            controller.setOnlineGame(true);
+            controller.setMultiplayerController(true);
+            controller.showPlayerNameInputPage();
+         }
       });
       playOptionsPanel.add(playOnlineButton);
       playOptionsPanel.add(playLocallyButton);
@@ -157,5 +203,36 @@ public class WelcomePage extends JFrame {
       getContentPane().setBackground(new Color(248, 237, 212));
 
       setLocationRelativeTo(null); // Center the frame on the screen
+   }
+
+   /* ********** Multiplayer Methods ********** */
+   public String promptForUsername() {
+      String username = null;
+      while (username == null || username.trim().isEmpty()) {
+         username = JOptionPane.showInputDialog(null, "Enter your public username:", "Username Prompt", JOptionPane.QUESTION_MESSAGE);
+         // Handle if user presses cancel
+         if (username == null) {
+            int decision = JOptionPane.showConfirmDialog(null, "Username is required. Do you want to exit?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (decision == JOptionPane.YES_OPTION) {
+               System.exit(0);  // Or any other action you'd like to perform if they wish to exit
+            }
+         }
+      }
+      return username.trim();
+   }
+
+   public String promptForRoomKey() {
+      String roomKey = null;
+      while (roomKey == null || roomKey.trim().isEmpty()) {
+         roomKey = JOptionPane.showInputDialog(null, "Enter your the room key for your game:", "Room Key", JOptionPane.QUESTION_MESSAGE);
+         // Handle if user presses cancel
+         if (roomKey == null) {
+            int decision = JOptionPane.showConfirmDialog(null, "Room Key is required. Do you want to exit?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (decision == JOptionPane.YES_OPTION) {
+               System.exit(0);  // Or any other action you'd like to perform if they wish to exit
+            }
+         }
+      }
+      return roomKey.trim();
    }
 }
