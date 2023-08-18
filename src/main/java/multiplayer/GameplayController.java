@@ -212,7 +212,7 @@ public class GameplayController {
     }
     private void handleStartGame(JSONObject message){
         checkServerError(message);
-
+        controller.showGameplayPage(true);
     }
     private void handleDiceRoll(JSONObject message){
         checkServerError(message);

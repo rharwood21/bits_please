@@ -30,7 +30,7 @@ public class GameController {
         welcomePage = new WelcomePage(this);
         gameSettingsPage = new GameSettingsPage(this);
         playerNameInputPage = new PlayerNameInputPage(this);
-        //questionEditorPage = new QuestionEditorPage(this);
+        questionEditorPage = new QuestionEditorPage(this);
         instructionsPage = new InstructionsPage(this);
 
         // Start the application by displaying the welcome page
@@ -113,7 +113,7 @@ public class GameController {
         welcomePage.dispose();
         playerNameInputPage.dispose();
         gameSettingsPage.dispose();
-        //questionEditorPage.dispose();
+        questionEditorPage.dispose();
         if (gameplayPage != null){
             gameplayPage.dispose();
         }

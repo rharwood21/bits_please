@@ -159,10 +159,12 @@ public class PlayerData {
     /* ********** Multiplayer Methods ********** */
     public static void setMultiplayerNamesAndOrder(JSONArray multiplayerPlayerNames, JSONArray multiplayerOrder){
         playerNames = new String[multiplayerPlayerNames.length()];
+        playerPositions = new int[multiplayerPlayerNames.length()][2];
         for (int i = 0; i < multiplayerPlayerNames.length(); i++){
             int order = multiplayerOrder.getInt(i);
             String name = multiplayerPlayerNames.getString(order);
             playerNames[order] = name;
+            setPlayerPositions(i, i * 2, 0);  // This will update playerPositions
         }
         playerCount = playerNames.length;
     }

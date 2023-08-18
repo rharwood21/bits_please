@@ -87,6 +87,7 @@ public class PlayerNameInputPage extends JFrame {
 
       nextButton = new JButton("Next");
       nextButton.addActionListener(e -> {
+         // TODO Validate
          // For each new game, there shall be new playerData.
          PlayerData.flushPlayerNames();
          PlayerData.flushPlayerColors();
@@ -207,6 +208,7 @@ public class PlayerNameInputPage extends JFrame {
    }
 
    public void refreshPlayerNameInputPage(){
+      // TODO: Can 3+ see existing player color choices?
       if (controller.isOnlineGame()){
          // Disable Next Button if not Controller
          if (!controller.isMultiplayerController()){

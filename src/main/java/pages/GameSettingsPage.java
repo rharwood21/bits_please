@@ -147,11 +147,11 @@ public class GameSettingsPage extends JFrame {
          }
          // navigate to the next page
          if (controller.isOnlineGame() && controller.isMultiplayerController()){
+            GameplayController.doStartGame();
             controller.showGameplayPage(true);
          } else {
             controller.showPlayerNameInputPage();
          }
-
       });
       JButton backButton = new JButton("Back");
       backButton.addActionListener(e -> controller.showWelcomePage());
