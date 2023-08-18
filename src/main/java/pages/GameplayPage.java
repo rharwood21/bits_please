@@ -177,10 +177,37 @@ public class GameplayPage extends JFrame {
       // Add component panels to the mainPanel.
       mainPanel.add(buttonPanel, BorderLayout.NORTH);
       mainPanel.add(gameBoardPanel, BorderLayout.CENTER);
-      mainPanel.add(playerPanel, BorderLayout.SOUTH);
+
+      // TODO: commenting out bc I think its not needed?
+//      mainPanel.add(playerPanel, BorderLayout.SOUTH);
 
       // Add components to the frame
       add(mainPanel, BorderLayout.CENTER);
+
+      int numCategories = GameData.getUniqueCategoryCount();
+      JPanel legendPanel = new JPanel(new GridLayout(1, numCategories));
+      JPanel legendItemPanel;
+      for (int i = 0; i < numCategories; i++) {
+         Color col = GameData.getColor(i);
+         String cat = GameData.getCategory(i) + " \t";
+         legendItemPanel = new JPanel();
+         if (col.equals(Color.RED)) {
+            legendItemPanel.add(new LegendItem(newRed));
+         } else if (col.equals(Color.YELLOW)) {
+            legendItemPanel.add(new LegendItem(newYellow));
+         } else if (col.equals(Color.BLUE)) {
+            legendItemPanel.add(new LegendItem(newBlue));
+         } else {
+            legendItemPanel.add(new LegendItem(newGreen));
+         }
+         legendItemPanel.add(new JLabel(cat));
+         legendPanel.add(legendItemPanel);
+
+
+
+      }
+      add(legendPanel, BorderLayout.SOUTH);
+
 
       // Set frame properties
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
