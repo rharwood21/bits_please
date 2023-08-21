@@ -138,6 +138,10 @@ public class GameplayPage extends JFrame {
       // Next Button/Panel
       currentPlayerLabel = new JLabel("Current Player: " + PlayerData.getPlayerName(currentPlayerIndex));
       currentPlayerLabel.setBorder(new LineBorder(Color.BLACK));
+      Font currentFont = currentPlayerLabel.getFont();
+      Font newFont = new Font("Roboto", currentFont.getStyle(), 24);
+      currentPlayerLabel.setFont(newFont);
+
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
       JButton nextButton = new JButton("Remove Me: Next");
       nextButton.addActionListener(e -> {
