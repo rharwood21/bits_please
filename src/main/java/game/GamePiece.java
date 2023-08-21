@@ -17,6 +17,10 @@ public class GamePiece extends JPanel {
         int diameter = Math.min(getWidth(), getHeight());
         g.setColor(color);
         g.fillOval((getWidth() - diameter) / 2, (getHeight() - diameter) / 2, diameter, diameter);
+
+        // Draw a black border around the piece
+        g.setColor(Color.BLACK);
+        g.drawOval((getWidth() - diameter) / 2, (getHeight() - diameter) / 2, diameter, diameter);
     }
 
     @Override
