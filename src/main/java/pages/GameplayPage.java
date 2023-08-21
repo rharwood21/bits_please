@@ -121,6 +121,8 @@ public class GameplayPage extends JFrame {
                // Normal Game Square
                drawSquare(square, squareMargin);
                Object[] gameSquareObject = (Object[]) gameBoardSquares[i][j];
+               JPanel gameSquarePanel = (JPanel) gameSquareObject[0];
+               gameSquarePanel.setBorder(new LineBorder(Color.BLACK));
                addBoardComponent(gameBoardPanel, (JPanel)gameSquareObject[0], i, j, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             }
          }
