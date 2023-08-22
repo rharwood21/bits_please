@@ -174,7 +174,7 @@ public class QuestionEditorPage extends JFrame {
       } catch (APIRequestException e) {
          tempQuestionList = null;
       }
-      refreshQuestions();
+
       updateLastUpdatedLabel();
       changeComponentEditability(true);
    }
@@ -233,7 +233,7 @@ public class QuestionEditorPage extends JFrame {
     * Refreshes the displayed questions by retrieving the latest questions from the
     * database.
     */
-   private void refreshQuestions() {
+   public void refreshQuestions() {
       // Retrieve new Client Questions from DB
       try {
          if (checkbox.isSelected()) {

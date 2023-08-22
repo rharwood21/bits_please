@@ -145,7 +145,7 @@ public class PlayerData {
         playerScores[playerIndex][categoryIndex] = true;
     }
     public static int checkWinConditionAndReturnPlayerIndex(){
-        for (int i = 0; i < playerCount - 1; i++){ // Iterate Over Players
+        for (int i = 0; i < playerCount; i++){ // Iterate Over Players
             boolean isWinner = true;
             for (int j = 0; j < 4; j++){  // Iterate Over Categories
                 if (!playerScores[i][j]){

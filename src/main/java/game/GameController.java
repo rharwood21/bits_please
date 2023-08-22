@@ -59,6 +59,7 @@ public class GameController {
      */
     public void showQuestionEditorPage() {
         disposePages();
+        questionEditorPage.refreshQuestions();
         questionEditorPage.setVisible(true);
     }
     /**
