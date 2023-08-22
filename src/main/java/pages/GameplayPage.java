@@ -145,12 +145,6 @@ public class GameplayPage extends JFrame {
       currentPlayerLabel.setFont(newFont);
 
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-      JButton nextButton = new JButton("Remove Me: Next");
-      nextButton.addActionListener(e -> {
-         // Pass control to the controller or navigate to the next page
-         // Example: navigating to the winner page
-         controller.showWinnerPage(0);
-      });
       JButton instructionsButton = new JButton("Instructions");
       instructionsButton.addActionListener(e -> controller.showInstructionsPage("GAMEPLAY"));
       // TODO: Dice ActionListener will ACTUALLY run gameplay, once we have Player board pieces
@@ -178,7 +172,7 @@ public class GameplayPage extends JFrame {
       buttonPanel.add(currentPlayerLabel);
       buttonPanel.add(dice);
       buttonPanel.add(instructionsButton);
-      buttonPanel.add(nextButton); // TODO: Remove Me
+//      buttonPanel.add(nextButton); // TODO: Remove Me
 
       // Add component panels to the mainPanel.
       mainPanel.add(buttonPanel, BorderLayout.NORTH);
