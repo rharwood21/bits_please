@@ -488,6 +488,10 @@ public class GameplayPage extends JFrame {
               launchChooseACategory() :
               colorToCategoryMap.get(squareColor);
       boolean isHQ = Objects.equals(square.getType(), "HQ");
+      boolean isTC = Objects.equals(square.getType(), "TC");
+      if (isTC) {
+         squareColor = GameData.getColorGivenCategory(category);
+      }
       if (category != null) {
          // TODO: Don't Show Duplicate Questions
          Question randomCategoryQuestion = GameData.getRandomQuestionByCategory(category);
@@ -503,7 +507,7 @@ public class GameplayPage extends JFrame {
             }
          }
          if (isCorrectAnswer) { // Increment Score
-            if (isHQ) {
+            if (isHQ || isTC) {
                PlayerData.incrementPlayerScore(currentPlayerIndex, colorToScoreboardIndexMap.get(squareColor));
                incrementScoreboard(currentPlayerIndex, squareColor);
             }

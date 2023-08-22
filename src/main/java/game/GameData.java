@@ -48,6 +48,13 @@ public class GameData {
         return categoryColors[index];
     }
 
+    public static Color getColorGivenCategory(String category){
+        for (int i = 0; i < gameCategories.length; i++) {
+            if (category.equals(gameCategories[i])) {return categoryColors[i];}
+        }
+        return null;
+    }
+
     public static int getUniqueCategoryCount(){
         return uniqCount(gameCategories);
     }
